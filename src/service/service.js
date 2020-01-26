@@ -8,10 +8,15 @@ const {
 } = require(`../constants`);
 
 const userArguments = process.argv.slice(USER_ARGV_INDEX);
-const [userCommand, userCommandNumber] = userArguments;
+const [userCommand, userMockItemsCount] = userArguments;
 if (userArguments.length === 0 || !Cli[userCommand]) {
   Cli[DEFAULT_COMMAND].run();
   process.exit(ExitCode.success);
 }
 
-Cli[userCommand].run(userCommandNumber);
+if (userMockItemsCount > 1000) {
+  console.info(`Не больше 1000 объявлений`);
+  process.exit(ExitCode.error);
+}
+
+Cli[userCommand].run(userMockItemsCount);
