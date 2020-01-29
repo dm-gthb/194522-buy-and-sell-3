@@ -30,7 +30,7 @@ const getPictureFileName = (number) => number > 10 ? `item${number}.jpg` : `item
 const readFile = async (path) => {
   try {
     const content = await fs.readFile(path, `utf-8`);
-    return content.split(`\n`);
+    return content.trim().split(`\n`);
   } catch (err) {
     console.error(chalk.red(err));
     return [];
@@ -61,7 +61,7 @@ module.exports = {
       const content = JSON.stringify(generateOffers(countOffer, ...generateOffersParams));
       fs.writeFile(FILE_NAME, content);
       console.log(chalk.green(`Operation success. File created.`));
-    } catch (e) {
+    } catch (err) {
       console.error(chalk.red(`Can't write data to file...`));
     }
   }
