@@ -52,14 +52,16 @@ module.exports = {
   name: `--generate`,
   async run(count) {
     const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
-    const sentences = await readFile(FILE_SENTENCES_PATH);
-    const titles = await readFile(FILE_TITLES_PATH);
-    const categories = await readFile(FILE_CATEGORIES_PATH);
-    const content = JSON.stringify(generateOffers(countOffer, categories, sentences, titles));
     try {
-      await fs.writeFile(FILE_NAME, content);
+      const generateOffersParams = await Promise.all([
+        readFile(FILE_CATEGORIES_PATH),
+        readFile(FILE_SENTENCES_PATH),
+        readFile(FILE_TITLES_PATH),
+      ]);
+      const content = JSON.stringify(generateOffers(countOffer, ...generateOffersParams));
+      fs.writeFile(FILE_NAME, content);
       console.log(chalk.green(`Operation success. File created.`));
-    } catch (err) {
+    } catch (e) {
       console.error(chalk.red(`Can't write data to file...`));
     }
   }
