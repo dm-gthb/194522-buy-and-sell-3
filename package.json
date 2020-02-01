@@ -6,7 +6,8 @@
   "scripts": {
     "eslint": "eslint --ext .js src/",
     "test": "npm run eslint",
-    "start": "node ./src/service/service.js"
+    "start": "node ./src/service/service.js",
+    "start.dev": "nodemon ./src/main.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
   "homepage": "https://github.com/dm-gthb/194522-buy-and-sell-3#readme",
   "devDependencies": {
     "eslint": "6.8.0",
-    "eslint-config-htmlacademy": "0.5.2"
+    "eslint-config-htmlacademy": "0.5.2",
+    "nodemon": "2.0.2"
   },
   "dependencies": {
     "chalk": "3.0.0"
