@@ -6,5 +6,9 @@ module.exports = {
   ExitCode: {
     error: 1,
     success: 0,
-  }
+  },
+  StatusCode: {
+    OK: 200,
+    NOT_FOUND: 404,
+  },
 };

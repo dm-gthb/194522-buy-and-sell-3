@@ -3,11 +3,13 @@
 const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
 const {getRandomInt, shuffleArray} = require(`../../utils`);
+const {ExitCode} = require(`../../constants`);
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 
-const DEFAULT_COUNT = 1;
+const DEFAULT_MOCKS_QUANTITY = 1;
+const MAX_MOCKS_QUANTITY = 1000;
 const FILE_NAME = `mocks.json`;
 
 const OfferType = {
@@ -50,15 +52,21 @@ const generateOffers = (count, categories, sentences, titles) => (
 
 module.exports = {
   name: `--generate`,
-  async run(count) {
-    const countOffer = Number.parseInt(count, 10) || DEFAULT_COUNT;
+  async run(args) {
+    const [userMocksQuantity] = args;
+    const offersQuantity = parseInt(userMocksQuantity, 10) || DEFAULT_MOCKS_QUANTITY;
+    if (offersQuantity > MAX_MOCKS_QUANTITY) {
+      console.info(chalk.red(`Не больше 1000 объявлений`));
+      process.exit(ExitCode.error);
+    }
+
     try {
       const generateOffersParams = await Promise.all([
         readFile(FILE_CATEGORIES_PATH),
         readFile(FILE_SENTENCES_PATH),
         readFile(FILE_TITLES_PATH),
       ]);
-      const content = JSON.stringify(generateOffers(countOffer, ...generateOffersParams));
+      const content = JSON.stringify(generateOffers(offersQuantity, ...generateOffersParams));
       fs.writeFile(FILE_NAME, content);
       console.log(chalk.green(`Operation success. File created.`));
     } catch (err) {
