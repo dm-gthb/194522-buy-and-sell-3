@@ -24,7 +24,7 @@ module.exports = {
         const mock = JSON.parse(fileContent);
         res.send(mock);
       } catch (err) {
-        res.status(StatusCode.INTERNAL_SERVER_ERROR).send(err);
+        res.send([]);
       }
     });
 
