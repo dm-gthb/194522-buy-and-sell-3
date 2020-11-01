@@ -4,13 +4,12 @@ const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
 const {nanoid} = require(`nanoid`);
 const {getRandomInt, shuffleArray} = require(`../../utils`);
-const {ExitCode} = require(`../../constants`);
+const {ExitCode, MAX_ID_LENGTH} = require(`../../constants`);
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 const FILE_COMMENTS_PATH = `./data/comments.txt`;
 
-const MAX_ID_LENGTH = 6;
 const DEFAULT_MOCKS_QUANTITY = 1;
 const MAX_MOCKS_QUANTITY = 1000;
 const MAX_COMMENTS_QUANTITY = 3;
