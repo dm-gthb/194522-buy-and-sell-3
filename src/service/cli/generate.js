@@ -2,14 +2,19 @@
 
 const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
+const {nanoid} = require(`nanoid`);
 const {getRandomInt, shuffleArray} = require(`../../utils`);
 const {ExitCode} = require(`../../constants`);
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
+const FILE_COMMENTS_PATH = `./data/comments.txt`;
 
+const MAX_ID_LENGTH = 6;
 const DEFAULT_MOCKS_QUANTITY = 1;
 const MAX_MOCKS_QUANTITY = 1000;
+const MAX_COMMENTS_QUANTITY = 3;
+const MAX_COMMENTS_SENTENCES_QUANTITY = 3;
 const FILE_NAME = `mocks.json`;
 
 const OfferType = {
@@ -39,14 +44,23 @@ const readFile = async (path) => {
   }
 };
 
-const generateOffers = (count, categories, sentences, titles) => (
+const generateOffers = (count, categories, sentences, titles, comments) => (
   Array(count).fill({}).map(() => ({
+    id: nanoid(MAX_ID_LENGTH),
     category: [categories[getRandomInt(0, categories.length - 1)]],
     description: shuffleArray(sentences).slice(1, 5).join(` `),
     picture: getPictureFileName(getRandomInt(PictureRestrict.min, PictureRestrict.max)),
     title: titles[getRandomInt(0, titles.length - 1)],
     type: Object.keys(OfferType)[Math.floor(Math.random() * Object.keys(OfferType).length)],
     sum: getRandomInt(SumRestrict.min, SumRestrict.max),
+    comments: Array(getRandomInt(1, MAX_COMMENTS_QUANTITY)).fill({}).map(() => {
+      return {
+        id: nanoid(MAX_ID_LENGTH),
+        text: shuffleArray(comments)
+          .slice(0, getRandomInt(1, MAX_COMMENTS_SENTENCES_QUANTITY))
+          .join(` `)
+      };
+    })
   }))
 );
 
@@ -65,6 +79,7 @@ module.exports = {
         readFile(FILE_CATEGORIES_PATH),
         readFile(FILE_SENTENCES_PATH),
         readFile(FILE_TITLES_PATH),
+        readFile(FILE_COMMENTS_PATH),
       ]);
       const content = JSON.stringify(generateOffers(offersQuantity, ...generateOffersParams));
       fs.writeFile(FILE_NAME, content);
