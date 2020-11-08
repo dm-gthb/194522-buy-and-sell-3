@@ -33,13 +33,12 @@ class OfferService {
   }
 
   findOne(id) {
-    console.log(this._offers.find((item) => item.id === id));
     return this._offers.find((item) => item.id === id);
   }
 
   update(id, offer) {
     const updatingOffer = this._offers.find((item) => item.id === id);
-    return Object.assign({updatingOffer, offer});
+    return Object.assign(updatingOffer, offer);
   }
 }
 
