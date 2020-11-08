@@ -39,7 +39,6 @@ module.exports = {
     const port = parseInt(userPort, 10) || DEFAULT_PORT;
 
     try {
-      await getMockData();
       app.listen(port, (err) => {
         if (err) {
           return logger.error(`Ошибка при создании сервера: ${err}`);
