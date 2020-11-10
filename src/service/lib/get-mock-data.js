@@ -1,21 +1,25 @@
 'use strict';
 
 const fs = require(`fs`).promises;
+const {getLogger} = require(`./logger`);
 
 const FILE_NAME = `mocks.json`;
-let data;
+const logger = getLogger({name: `mock`});
+let data = [];
 
 const getMockData = async () => {
-  if (data) {
-    return Promise.resolve(data);
+  if (data.length) {
+    return data;
   }
 
   try {
     const fileContent = await fs.readFile(FILE_NAME);
-    return Promise.resolve(JSON.parse(fileContent));
+    data = JSON.parse(fileContent);
   } catch (err) {
-    return Promise.reject(err);
+    logger.error(err);
   }
+
+  return data;
 };
 
 module.exports = getMockData;

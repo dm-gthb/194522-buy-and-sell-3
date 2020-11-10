@@ -10,5 +10,6 @@ module.exports = (service) => (req, res, next) => {
     return res.status(StatusCode.NOT_FOUND).send(`Offer ${offerId} not found`);
   }
   res.locals.offer = offer;
+  res.locals.offerId = offerId;
   return next();
 };

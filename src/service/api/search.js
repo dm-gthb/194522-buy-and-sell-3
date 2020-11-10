@@ -3,13 +3,13 @@
 const {Router} = require(`express`);
 const {StatusCode} = require(`../../constants`);
 
-const route = new Router();
-
 module.exports = (app, service) => {
+  const route = new Router();
+
   app.use(`/search`, route);
 
   route.get(`/`, (req, res) => {
-    const {query = ``} = req.params;
+    const {query = ``} = req.query;
 
     if (!query) {
       return res.status(StatusCode.BAD_REQUEST).json([]);
