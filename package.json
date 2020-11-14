@@ -10,7 +10,6 @@
     "jest": "jest",
     "start": "cross-env LOG_LEVEL=error node ./src/service/service.js",
     "start::debug": "cross-env LOG_LEVEL=info NODE_ENV=development node ./src/service/service.js",
-    "start.dev": "nodemon ./src/main.js",
     "start-front-server": "nodemon ./src/express/index.js"
   },
   "repository": {
@@ -32,11 +31,13 @@
     "supertest": "6.0.1"
   },
   "dependencies": {
+    "axios": "0.21.0",
     "chalk": "3.0.0",
     "cross-env": "7.0.2",
     "express": "4.17.1",
+    "multer": "1.4.2",
     "nanoid": "3.1.16",
     "pino": "6.7.0",
-    "pug": "3.0.0"
+    "pug": "2.0.4"
   }
 }
