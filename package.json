@@ -8,8 +8,8 @@
     "test": "npm run eslint && npm run jest",
     "test::rest": "jest .e2e.test.js",
     "jest": "jest",
-    "start": "cross-env LOG_LEVEL=error node ./src/service/service.js",
-    "start::debug": "cross-env LOG_LEVEL=info NODE_ENV=development node ./src/service/service.js",
+    "start": "cross-env NODE_ENV=production node ./src/service/service.js",
+    "start::debug": "cross-env NODE_ENV=development node ./src/service/service.js",
     "start-front-server": "nodemon ./src/express/index.js"
   },
   "repository": {
