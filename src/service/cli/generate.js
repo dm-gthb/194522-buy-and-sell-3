@@ -17,18 +17,18 @@ const MAX_COMMENTS_SENTENCES_QUANTITY = 3;
 const FILE_NAME = `mocks.json`;
 
 const OfferType = {
-  offer: `offer`,
-  sale: `sale`,
+  OFFER: `offer`,
+  SALE: `sale`,
 };
 
 const SumRestrict = {
-  min: 1000,
-  max: 100000,
+  MIN: 1000,
+  MAX: 100000,
 };
 
 const PictureRestrict = {
-  min: 1,
-  max: 16,
+  MIN: 1,
+  MAX: 16,
 };
 
 const getPictureFileName = (number) => number > 10 ? `item${number}.jpg` : `item0${number}.jpg`;
@@ -48,10 +48,10 @@ const generateOffers = (count, categories, sentences, titles, comments) => (
     id: nanoid(MAX_ID_LENGTH),
     category: [categories[getRandomInt(0, categories.length - 1)]],
     description: shuffleArray(sentences).slice(1, 5).join(` `),
-    picture: getPictureFileName(getRandomInt(PictureRestrict.min, PictureRestrict.max)),
+    picture: getPictureFileName(getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX)),
     title: titles[getRandomInt(0, titles.length - 1)],
     type: Object.keys(OfferType)[Math.floor(Math.random() * Object.keys(OfferType).length)],
-    sum: getRandomInt(SumRestrict.min, SumRestrict.max),
+    sum: getRandomInt(SumRestrict.MIN, SumRestrict.MAX),
     comments: Array(getRandomInt(1, MAX_COMMENTS_QUANTITY)).fill({}).map(() => {
       return {
         id: nanoid(MAX_ID_LENGTH),
@@ -70,7 +70,7 @@ module.exports = {
     const offersQuantity = parseInt(userMocksQuantity, 10) || DEFAULT_MOCKS_QUANTITY;
     if (offersQuantity > MAX_MOCKS_QUANTITY) {
       console.info(chalk.red(`Не больше 1000 объявлений`));
-      process.exit(ExitCode.error);
+      process.exit(ExitCode.ERROR);
     }
 
     try {

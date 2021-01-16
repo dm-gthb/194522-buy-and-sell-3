@@ -6,8 +6,8 @@ module.exports = {
   API_PREFIX: `/api`,
   MAX_ID_LENGTH: 6,
   ExitCode: {
-    error: 1,
-    success: 0,
+    ERROR: 1,
+    SUCCESS: 0,
   },
   StatusCode: {
     OK: 200,
