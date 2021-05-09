@@ -53,12 +53,12 @@ module.exports = {
     try {
       app.listen(port, (err) => {
         if (err) {
-          return logger.error(`Ошибка при создании сервера: ${err}`);
+          return logger.error(`Server creation error: ${err}`);
         }
-        return logger.info(`Сервер запущен на ${port}`);
+        return logger.info(`Server is running on port: ${port}`);
       });
     } catch (err) {
-      logger.error(`Произошла ошибка: ${err.message}`);
+      logger.error(`An error occured: ${err.message}`);
       process.exit(ExitCode.ERROR);
     }
   }
