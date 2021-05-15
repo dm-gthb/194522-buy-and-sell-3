@@ -11,10 +11,9 @@ const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 const FILE_COMMENTS_PATH = `./data/comments.txt`;
 
-const MAX_COMMENTS_QUANTITY = 3;
-const MAX_COMMENTS_SENTENCES_QUANTITY = 3;
 const DEFAULT_MOCKS_QUANTITY = 1;
 const MAX_MOCKS_QUANTITY = 1000;
+const MIN_CATEGORIES_QUANTITY = 1;
 
 const OfferType = {
   OFFER: `offer`,
@@ -29,6 +28,21 @@ const SumRestrict = {
 const PictureRestrict = {
   MIN: 1,
   MAX: 16,
+};
+
+const DescriptionSentencesCount = {
+  MIN: 1,
+  MAX: 5,
+};
+
+const CommentsCount = {
+  MIN: 1,
+  MAX: 3,
+};
+
+const CommentsSentencesCount = {
+  MIN: 1,
+  MAX: 3,
 };
 
 const logger = getLogger({});
@@ -63,16 +77,16 @@ const generate = async (count, isIds = false) => {
 
     const offers = Array(offersQuantity).fill({}).map(() => {
       return {
-        category: [categories[getRandomInt(0, categories.length - 1)]],
-        description: shuffleArray(sentences).slice(1, 5).join(` `),
+        category: shuffleArray(categories).slice(0, getRandomInt(MIN_CATEGORIES_QUANTITY, categories.length - 1)),
+        description: shuffleArray(sentences).slice(DescriptionSentencesCount.MIN, DescriptionSentencesCount.MAX).join(` `),
         picture: getPictureFileName(getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX)),
         title: titles[getRandomInt(0, titles.length - 1)],
         type: Object.keys(OfferType)[Math.floor(Math.random() * Object.keys(OfferType).length)],
         sum: getRandomInt(SumRestrict.MIN, SumRestrict.MAX),
-        comments: Array(getRandomInt(1, MAX_COMMENTS_QUANTITY)).fill({}).map(() => {
+        comments: Array(getRandomInt(CommentsCount.MIN, CommentsCount.MAX)).fill({}).map(() => {
           return {
             text: shuffleArray(comments)
-              .slice(0, getRandomInt(1, MAX_COMMENTS_SENTENCES_QUANTITY))
+              .slice(0, getRandomInt(CommentsSentencesCount.MIN, CommentsSentencesCount.MAX))
               .join(` `),
             ...(isIds && addId())
           };
