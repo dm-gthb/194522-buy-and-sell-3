@@ -1,9 +1,9 @@
 'use strict';
 
+const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
 const {nanoid} = require(`nanoid`);
 const {getRandomInt, shuffleArray} = require(`../../utils`);
-const {getLogger} = require(`../lib/logger`);
 const {MAX_ID_LENGTH, ExitCode} = require(`../../constants`);
 
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
@@ -45,8 +45,6 @@ const CommentsSentencesCount = {
   MAX: 3,
 };
 
-const logger = getLogger({});
-
 const addId = () => ({id: nanoid(MAX_ID_LENGTH)});
 const getPictureFileName = (number) => number > 10 ? `item${number}.jpg` : `item0${number}.jpg`;
 
@@ -55,7 +53,7 @@ const readFile = async (path) => {
     const content = await fs.readFile(path, `utf-8`);
     return content.trim().split(`\n`);
   } catch (err) {
-    logger.error(err);
+    console.error(chalk.red(err));
     return [];
   }
 };
@@ -63,7 +61,7 @@ const readFile = async (path) => {
 const generate = async (count, isIds = false) => {
   const offersQuantity = parseInt(count, 10) || DEFAULT_MOCKS_QUANTITY;
   if (offersQuantity > MAX_MOCKS_QUANTITY) {
-    logger.info(`${MAX_MOCKS_QUANTITY} max`);
+    console.error(chalk.red(`${MAX_MOCKS_QUANTITY} max`));
     process.exit(ExitCode.ERROR);
   }
 
@@ -100,7 +98,7 @@ const generate = async (count, isIds = false) => {
       categories
     };
   } catch (err) {
-    return logger.error(err);
+    return console.error(chalk.red(err));
   }
 };
 
