@@ -1,8 +1,11 @@
 'use strict';
 
 const ExitCode = require(`../../constants`);
+const {getLogger} = require(`./logger`);
 
-module.exports = async (sequelize, logger) => {
+const logger = getLogger();
+
+module.exports = async (sequelize) => {
   try {
     logger.info(`Trying to connect to database...`);
     await sequelize.authenticate();

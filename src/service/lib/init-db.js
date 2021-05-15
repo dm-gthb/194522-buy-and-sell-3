@@ -3,8 +3,11 @@
 const {ExitCode} = require(`../../constants`);
 const defineModels = require(`../models`);
 const Aliase = require(`../models/aliase`);
+const {getLogger} = require(`./logger`);
 
-module.exports = async (sequelize, data, logger) => {
+const logger = getLogger();
+
+module.exports = async (sequelize, data) => {
   const {offers, categories} = data;
 
   try {
