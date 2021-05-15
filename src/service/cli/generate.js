@@ -15,7 +15,7 @@ module.exports = {
     try {
       const {offers} = await generateDataWithIds(mocksQuantity);
       const content = JSON.stringify(offers);
-      fs.writeFile(FILE_NAME, content);
+      await fs.writeFile(FILE_NAME, content);
       logger.info(`Operation success. File created.`);
     } catch (err) {
       logger.error(err);
