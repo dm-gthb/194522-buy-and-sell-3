@@ -4,7 +4,7 @@ const sequelize = require(`../lib/sequelize`);
 const connectDatabase = require(`../lib/connect-db`);
 const initDatabase = require(`../lib/init-db`);
 const {getLogger} = require(`../lib/logger`);
-const {generateData} = require(`./get-mock-data`);
+const {generateData} = require(`./generate-mock-data`);
 
 const logger = getLogger();
 

@@ -2,7 +2,7 @@
 
 const chalk = require(`chalk`);
 const fs = require(`fs`).promises;
-const {generateDataWithIds} = require(`./get-mock-data`);
+const {generateDataWithIds} = require(`./generate-mock-data`);
 
 const FILE_NAME = `mocks.json`;
 
