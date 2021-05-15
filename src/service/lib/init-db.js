@@ -8,12 +8,12 @@ const {getLogger} = require(`./logger`);
 const logger = getLogger();
 
 module.exports = async (sequelize, data) => {
-  const {offers, categories} = data;
+  const {users, offers, categories} = data;
 
   try {
     logger.info(`Trying to fill database...`);
 
-    const {Category, Offer} = defineModels(sequelize);
+    const {User, Category, Offer} = defineModels(sequelize);
     await sequelize.sync({force: true});
 
     const categoryModels = await Category.bulkCreate(
@@ -31,11 +31,18 @@ module.exports = async (sequelize, data) => {
       };
     }, {});
 
+    const usersPromises = users.map(async (user) => {
+      await User.create(user, {include: [Aliase.OFFERS, Aliase.COMMENTS]});
+    });
+
+    const offersPromises = offers.map(async (offer) => {
+      const offerModel = await Offer.create(offer, {include: [Aliase.COMMENTS]});
+      await offerModel.addCategories(transformCategoriesNamesToIds(offer.category, categoryNameToIdMap));
+    });
+
     await Promise.all([
-      offers.map(async (offer) => {
-        const offerModel = await Offer.create(offer, {include: [Aliase.COMMENTS]});
-        await offerModel.addCategories(transformCategoriesNamesToIds(offer.category, categoryNameToIdMap));
-      })
+      ...usersPromises,
+      ...offersPromises,
     ]);
 
     logger.info(`DB was successfully filled with mock data.`);

@@ -45,6 +45,23 @@ const CommentsSentencesCount = {
   MAX: 3,
 };
 
+const MOCK_USERS = [
+  {
+    email: `ivanov@example.com`,
+    passwordHash: `asdfasdfasdf`,
+    firstName: `Иван`,
+    lastName: `Иванов`,
+    avatar: `avatar1.jpg`
+  },
+  {
+    email: `petrov@example.com`,
+    passwordHash: `qwerqwer`,
+    firstName: `Пётр`,
+    lastName: `Петров`,
+    avatar: `avatar2.jpg`
+  }
+];
+
 const addId = () => ({id: nanoid(MAX_ID_LENGTH)});
 const getPictureFileName = (number) => number > 10 ? `item${number}.jpg` : `item0${number}.jpg`;
 
@@ -94,8 +111,9 @@ const generate = async (count, isIds = false) => {
     });
 
     return {
+      users: [...MOCK_USERS],
       offers,
-      categories
+      categories,
     };
   } catch (err) {
     return console.error(chalk.red(err));
