@@ -8,14 +8,14 @@ module.exports = (app, service) => {
 
   app.use(`/search`, route);
 
-  route.get(`/`, (req, res) => {
+  route.get(`/`, async (req, res) => {
     const {query = ``} = req.query;
 
     if (!query) {
       return res.status(StatusCode.BAD_REQUEST).json([]);
     }
 
-    const searchResult = service.findAll(query);
+    const searchResult = await service.findAll(query);
     const searchStatus = searchResult.length > 0 ? StatusCode.OK : StatusCode.NOT_FOUND;
 
     return res.status(searchStatus).json(searchResult);

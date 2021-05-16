@@ -2,9 +2,9 @@
 
 const {StatusCode} = require(`../../constants`);
 
-module.exports = (service) => (req, res, next) => {
+module.exports = (service) => async (req, res, next) => {
   const {offerId} = req.params;
-  const offer = service.findOne(offerId);
+  const offer = await service.findOne(offerId);
 
   if (!offer) {
     return res.status(StatusCode.NOT_FOUND).send(`Offer ${offerId} not found`);
