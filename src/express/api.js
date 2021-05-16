@@ -31,8 +31,8 @@ class API {
     return this._load(`/search`, {params: {query}});
   }
 
-  getCategories() {
-    return this._load(`/categories`);
+  getCategories(isNeedCount) {
+    return this._load(`/categories`, {params: {isNeedCount}});
   }
 
   createOffer(data) {
