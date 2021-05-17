@@ -19,12 +19,12 @@ class API {
     return response.data;
   }
 
-  getOffers({comments}) {
-    return this._load(`/offers`, {params: {comments}});
+  getOffers({isWithComments}) {
+    return this._load(`/offers`, {params: {isWithComments}});
   }
 
-  getOffer(id) {
-    return this._load(`/offers/${id}`);
+  getOffer(id, {isWithComments}) {
+    return this._load(`/offers/${id}`, {params: {isWithComments}});
   }
 
   search(query) {

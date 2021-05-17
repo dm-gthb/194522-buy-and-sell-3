@@ -22,13 +22,17 @@ class OfferService {
     return !!deletedRows;
   }
 
-  findOne(id) {
-    return this._Offer.findByPk(id, {include: Aliase.CATEGORIES});
+  findOne(id, isWithComments) {
+    const include = [Aliase.CATEGORIES];
+    if (isWithComments) {
+      include.push(Aliase.COMMENTS);
+    }
+    return this._Offer.findByPk(id, {include});
   }
 
-  async findAll(isNeedComments) {
+  async findAll(isWithComments) {
     const include = [Aliase.CATEGORIES];
-    if (isNeedComments) {
+    if (isWithComments) {
       include.push(Aliase.COMMENTS);
     }
     const offers = await this._Offer.findAll({include});

@@ -4,7 +4,8 @@ const {StatusCode} = require(`../../constants`);
 
 module.exports = (service) => async (req, res, next) => {
   const {offerId} = req.params;
-  const offer = await service.findOne(offerId);
+  const {isWithComments} = req.query;
+  const offer = await service.findOne(offerId, isWithComments);
 
   if (!offer) {
     return res.status(StatusCode.NOT_FOUND).send(`Offer ${offerId} not found`);
