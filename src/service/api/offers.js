@@ -47,7 +47,7 @@ module.exports = (app, offerService, commentService) => {
 
   route.post(`/:offerId/comments`, [offerExist(offerService), commentValidator], async (req, res) => {
     const {offer} = res.locals;
-    const newComment = await commentService.create(offer, req.body);
+    const newComment = await commentService.create(offer.id, req.body);
     return res.status(StatusCode.CREATED).json(newComment);
   });
 

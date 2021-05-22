@@ -10,7 +10,7 @@ class OfferService {
   }
 
   async create(offerData) {
-    const offer = this._Offer.create(offerData);
+    const offer = await this._Offer.create(offerData);
     await offer.addCategories(offerData.categories);
     return offer.get();
   }
