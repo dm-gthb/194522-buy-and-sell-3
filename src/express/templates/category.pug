@@ -11,7 +11,7 @@ block content
       .tickets-list__wrapper
         .tickets-list__header
           p.tickets-list__title #{category.name}
-            b.js-qty 62
+            b.js-qty #{offers.length}
         ul
           each offer in offers
             li.tickets-list__item
@@ -21,7 +21,8 @@ block content
                 .ticket-card__info
                   +ticketLabel(offer.type)
                   .ticket-card__categories
-                    a(href="#") #{category.name}
+                    each category in categories
+                      a(href="#") #{category.name}
                   .ticket-card__header
                     h3.ticket-card__title
                       a(href="#") #{offer.title}
