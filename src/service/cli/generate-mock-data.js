@@ -45,7 +45,7 @@ const CommentsSentencesCount = {
   MAX: 3,
 };
 
-const MOCK_USERS = [
+const mockUsers = [
   {
     email: `ivanov@example.com`,
     passwordHash: `asdfasdfasdf`,
@@ -92,6 +92,7 @@ const generate = async (count, isIds = false) => {
 
     const offers = Array(offersQuantity).fill({}).map(() => {
       return {
+        userId: getRandomInt(1, mockUsers.length),
         category: shuffleArray(categories).slice(0, getRandomInt(MIN_CATEGORIES_QUANTITY, categories.length - 1)),
         description: shuffleArray(sentences).slice(DescriptionSentencesCount.MIN, DescriptionSentencesCount.MAX).join(` `),
         picture: getPictureFileName(getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX)),
@@ -100,6 +101,7 @@ const generate = async (count, isIds = false) => {
         sum: getRandomInt(SumRestrict.MIN, SumRestrict.MAX),
         comments: Array(getRandomInt(CommentsCount.MIN, CommentsCount.MAX)).fill({}).map(() => {
           return {
+            userId: getRandomInt(1, mockUsers.length),
             text: shuffleArray(comments)
               .slice(0, getRandomInt(CommentsSentencesCount.MIN, CommentsSentencesCount.MAX))
               .join(` `),
@@ -111,7 +113,7 @@ const generate = async (count, isIds = false) => {
     });
 
     return {
-      users: [...MOCK_USERS],
+      users: [...mockUsers],
       offers,
       categories,
     };

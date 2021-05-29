@@ -40,10 +40,8 @@ module.exports = async (sequelize, data) => {
       await offerModel.addCategories(transformCategoriesNamesToIds(offer.category, categoryNameToIdMap));
     });
 
-    await Promise.all([
-      ...usersPromises,
-      ...offersPromises,
-    ]);
+    await Promise.all(usersPromises);
+    await Promise.all(offersPromises);
 
     logger.info(`DB was successfully filled with mock data.`);
   } catch (err) {
