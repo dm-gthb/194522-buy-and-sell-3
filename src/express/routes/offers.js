@@ -46,7 +46,18 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   }
 });
 
-offersRouter.get(`/category/:id`, (req, res) => res.render(`category`));
+offersRouter.get(`/category/:id`, async (req, res) => {
+  const {id} = req.params;
+  const [
+    {offers, category},
+    categories
+  ] = await Promise.all([
+    api.getOffersByCategory(id),
+    api.getCategories(true),
+  ]);
+
+  res.render(`category`, {offers, category, categories});
+});
 
 offersRouter.get(`/edit/:id`, async (req, res) => {
   const {id} = req.params;

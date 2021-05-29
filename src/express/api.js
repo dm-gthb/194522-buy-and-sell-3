@@ -23,6 +23,10 @@ class API {
     return this._load(`/offers`, {params: {isWithComments}});
   }
 
+  getOffersByCategory(categoryId) {
+    return this._load(`/offers`, {params: {categoryId}});
+  }
+
   getOffer(id, {isWithComments}) {
     return this._load(`/offers/${id}`, {params: {isWithComments}});
   }

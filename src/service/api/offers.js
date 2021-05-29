@@ -12,8 +12,14 @@ module.exports = (app, offerService, commentService) => {
   app.use(`/offers`, route);
 
   route.get(`/`, async (req, res) => {
-    const {comments} = req.query;
-    const offers = await offerService.findAll(comments);
+    const {isWithComments, categoryId} = req.query;
+
+    if (categoryId) {
+      const result = await offerService.findByCategory(categoryId);
+      return res.status(StatusCode.OK).json(result);
+    }
+
+    const offers = await offerService.findAll(isWithComments);
     return res.status(StatusCode.OK).json(offers);
   });
 

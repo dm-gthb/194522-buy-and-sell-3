@@ -39,6 +39,23 @@ class OfferService {
     return offers.map((item) => item.get());
   }
 
+  async findByCategory(categoryId) {
+    const category = await this._Category.findByPk(categoryId);
+
+    if (!category) {
+      return {
+        offers: [],
+        category: null
+      };
+    }
+
+    const offers = await category.getOffers();
+    return {
+      offers: offers.map((offer) => offer.get()),
+      category: category.get()
+    };
+  }
+
   async update(id, offer) {
     const [affectedRows] = await this._Offer.update(offer, {
       where: {id}
