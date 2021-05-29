@@ -21,7 +21,8 @@ block content
                 .ticket-card__info
                   +ticketLabel(offer.type)
                   .ticket-card__categories
-                    a(href="#") #{category.name}
+                    each category in categories
+                      a(href="#") #{category.name}
                   .ticket-card__header
                     h3.ticket-card__title
                       a(href="#") #{offer.title}
