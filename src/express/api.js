@@ -19,8 +19,8 @@ class API {
     return response.data;
   }
 
-  getOffers({isWithComments}) {
-    return this._load(`/offers`, {params: {isWithComments}});
+  getOffers({isWithComments, offset, limit}) {
+    return this._load(`/offers`, {params: {isWithComments, offset, limit}});
   }
 
   getOffersByCategory(categoryId) {

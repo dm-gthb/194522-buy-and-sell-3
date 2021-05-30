@@ -1,0 +1,31 @@
+mixin pagination(totalCount, currentPage, width)
+  -
+    const pagesAfter = [];
+    const pagesFromCurrentToBegining = [];
+    const isBeforeMore = (currentPage - width) > 1;
+    const isAfterMore = (totalCount - currentPage) > width;
+
+    for (let i = currentPage - 1; i > 0 && pagesFromCurrentToBegining.length < width; i--) {
+      pagesFromCurrentToBegining.push(i);
+    }
+
+    for (let i = currentPage + 1; i <= totalCount && pagesAfter.length < width; i++) {
+      pagesAfter.push(i);
+    }
+
+    const pagesBefore = [...pagesFromCurrentToBegining.reverse()];
+
+  if isBeforeMore
+    li
+      a(href=`?page=${page - 1}`) Назад
+  each pageBefore in pagesBefore
+    li
+      a(href=`?page=${pageBefore}`) #{pageBefore}
+  li
+    a.active(href="#") #{currentPage}
+  each pageAfter in pagesAfter
+    li
+      a(href=`?page=${pageAfter}`) #{pageAfter}
+  if isAfterMore
+    li
+      a(href=`?page=${page + 1}`) Вперед

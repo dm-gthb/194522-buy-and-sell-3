@@ -6,9 +6,13 @@ head
   meta(http-equiv='X-UA-Compatible' content='ie=edge')
   title Куплю. Продам
   link(rel='stylesheet' href='/css/style.min.css')
+  style.
+    a.active{
+      pointer-events: none;
+    }
 body
-  mixin ticketLabel(type)
-    span(class!=attributes.class || `ticket-card__label`) #{type === `OFFER` ? `Куплю` : `Продам`}
+  include mixins/ticket-label.pug
+  include mixins/pagination.pug
   include partials/header.pug
   block content
   include partials/footer.pug

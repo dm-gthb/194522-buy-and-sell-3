@@ -27,3 +27,6 @@ block content
                       |  ₽
                   .ticket-card__desc
                     p #{offer.description}
+        .tickets-list__pagination
+          ul.pagination
+            +pagination(totalPagesCount, page, 2)
