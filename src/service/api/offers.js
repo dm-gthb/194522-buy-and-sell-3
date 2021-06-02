@@ -19,9 +19,10 @@ module.exports = (app, offerService, commentService) => {
       return res.status(StatusCode.OK).json(result);
     }
 
-    const findAll = async (params) => await offerService.findAll(...params);
-    const findPage = async (params) => await offerService.findPage(...params);
-    const offers = limit || offset ? findPage(limit, offset) : findAll(isWithComments);
+    const isFindPage = limit || offset;
+    const findPage = async () => await offerService.findPage(limit, offset);
+    const findAll = async () => await offerService.findAll(isWithComments);
+    const offers = isFindPage ? await findPage() : await findAll();
     return res.status(StatusCode.OK).json(offers);
   });
 

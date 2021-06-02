@@ -56,7 +56,7 @@ class OfferService {
     };
   }
 
-  async findPage({limit, offset}) {
+  async findPage(limit, offset) {
     const {count, rows} = await this._Offer.findAndCountAll({
       limit,
       offset,
