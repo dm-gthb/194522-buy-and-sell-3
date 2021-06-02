@@ -15,7 +15,7 @@ module.exports = (app, offerService, commentService) => {
     const {isWithComments, categoryId, offset, limit} = req.query;
 
     if (categoryId) {
-      const result = await offerService.findByCategory(categoryId, limit, offset);
+      const result = await offerService.findPageByCategory(categoryId, limit, offset);
       return res.status(StatusCode.OK).json(result);
     }
 

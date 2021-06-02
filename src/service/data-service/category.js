@@ -9,6 +9,10 @@ class CategoryService {
     this._OfferCategory = sequelize.models.OfferCategory;
   }
 
+  async findOne(id) {
+    return this._Category.findByPk(id);
+  }
+
   async findAll(isNeedCount = false) {
     if (isNeedCount) {
       const result = await this._Category.findAll({

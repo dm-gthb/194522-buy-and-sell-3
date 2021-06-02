@@ -2,16 +2,13 @@ extends layout.pug
 
 block content
   main.page-content
-    section.categories-list
-      h1.visually-hidden Сервис объявлений "Куплю - продам"
-      ul.categories-list__wrapper
-        include partials/categories.pug
+    include partials/categories.pug
     section.tickets-list
       h2.visually-hidden Предложения из категории #{category.name}
       .tickets-list__wrapper
         .tickets-list__header
-          p.tickets-list__title #{category.name}
-            b.js-qty #{offers.length}
+          p.tickets-list__title #{category.name}&nbsp;
+            b.js-qty #{count}
         ul
           each offer in offers
             li.tickets-list__item
@@ -22,7 +19,7 @@ block content
                   +ticketLabel(offer.type)
                   .ticket-card__categories
                     each category in categories
-                      a(href="#") #{category.name}
+                      a(href=`/offers/category/${category.id}`) #{category.name}
                   .ticket-card__header
                     h3.ticket-card__title
                       a(href="#") #{offer.title}
@@ -33,15 +30,4 @@ block content
                     p #{offer.description}
         .tickets-list__pagination
           ul.pagination
-            li
-              a.active(href="#") 1
-            li
-              a(href="#") 2
-            li
-              a(href="#") 3
-            li
-              a(href="#") 4
-            li
-              a(href="#") 5
-            li
-              a(href="#") дальше
+            +pagination(totalPagesCount, page, 2)

@@ -1,9 +1,8 @@
 'use strict';
 
 const {Router} = require(`express`);
+const {OFFERS_PER_PAGE} = require(`../../constants`);
 const api = require(`../api`).getAPI();
-
-const OFFERS_PER_PAGE = 8;
 
 const mainRouter = new Router();
 
@@ -21,7 +20,6 @@ mainRouter.get(`/`, async (req, res) => {
   ]);
 
   const totalPagesCount = Math.ceil(count / OFFERS_PER_PAGE);
-
   res.render(`main`, {offers, categories, page, totalPagesCount});
 });
 

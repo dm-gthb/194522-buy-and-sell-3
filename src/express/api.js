@@ -23,8 +23,8 @@ class API {
     return this._load(`/offers`, {params: {isWithComments, offset, limit}});
   }
 
-  getOffersByCategory(categoryId) {
-    return this._load(`/offers`, {params: {categoryId}});
+  getOffersByCategory(categoryId, limit, offset) {
+    return this._load(`/offers`, {params: {categoryId, limit, offset}});
   }
 
   getOffer(id, {isWithComments}) {
@@ -37,6 +37,10 @@ class API {
 
   getCategories(isNeedCount) {
     return this._load(`/categories`, {params: {isNeedCount}});
+  }
+
+  getCategory(id) {
+    return this._load(`/categories/${id}`);
   }
 
   createOffer(data) {

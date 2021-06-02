@@ -29,6 +29,7 @@ const define = (sequelize) => {
   Offer.belongsToMany(Category, {through: OfferCategory, as: Aliase.CATEGORIES});
   Category.belongsToMany(Offer, {through: OfferCategory, as: Aliase.OFFERS});
   Category.hasMany(OfferCategory, {as: Aliase.OFFER_CATEGORIES});
+  Offer.hasMany(OfferCategory, {as: Aliase.OFFER_CATEGORIES});
 
   return {
     Category,

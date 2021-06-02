@@ -5,6 +5,7 @@ module.exports = {
   USER_ARGV_INDEX: 2,
   API_PREFIX: `/api`,
   MAX_ID_LENGTH: 6,
+  OFFERS_PER_PAGE: 8,
   ExitCode: {
     ERROR: 1,
     SUCCESS: 0,

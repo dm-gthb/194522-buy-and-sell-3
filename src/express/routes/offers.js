@@ -4,6 +4,7 @@ const {Router} = require(`express`);
 const path = require(`path`);
 const multer = require(`multer`);
 const {nanoid} = require(`nanoid`);
+const {OFFERS_PER_PAGE} = require(`../../constants`);
 const api = require(`../api`).getAPI();
 
 const UPLOAD_DIR = `../upload/img/`;
@@ -47,16 +48,23 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
 });
 
 offersRouter.get(`/category/:id`, async (req, res) => {
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = OFFERS_PER_PAGE;
+  const offset = (page - 1) * OFFERS_PER_PAGE;
+
   const {id} = req.params;
   const [
-    {offers, category},
-    categories
+    {count, offers},
+    categories,
+    category,
   ] = await Promise.all([
-    api.getOffersByCategory(id),
+    api.getOffersByCategory(id, limit, offset),
     api.getCategories(true),
+    api.getCategory(id),
   ]);
 
-  res.render(`category`, {offers, category, categories});
+  const totalPagesCount = Math.ceil(count / OFFERS_PER_PAGE);
+  res.render(`category`, {count, offers, categories, category, page, totalPagesCount});
 });
 
 offersRouter.get(`/edit/:id`, async (req, res) => {
