@@ -1,0 +1,11 @@
+style.
+  .server-error{
+    border-radius: 10px;
+    color: white;
+    background-color: tomato;
+    margin: 20px 0;
+    padding: 10px;
+  }
+mixin validationErrorMessage(message)
+  if message
+    .server-error= message

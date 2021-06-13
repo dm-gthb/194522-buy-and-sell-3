@@ -15,3 +15,10 @@ module.exports.shuffleArray = (someArray) => {
   return someArray;
 };
 
+module.exports.ensureArray = (value) => {
+  if (value) {
+    return Array.isArray(value) ? value : [value];
+  }
+
+  return [];
+};

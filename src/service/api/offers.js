@@ -2,9 +2,10 @@
 
 const {Router} = require(`express`);
 const {StatusCode} = require(`../../constants`);
-const commentValidator = require(`../middlewares/comment-validator`);
+const schemaValidator = require(`../middlewares/schema-validator`);
+const offerSchema = require(`../schemas/offer`);
+const commentSchema = require(`../schemas/comment`);
 const offerExist = require(`../middlewares/offer-exist`);
-const offerValidator = require(`../middlewares/offer-validator`);
 
 module.exports = (app, offerService, commentService) => {
   const route = new Router();
@@ -31,12 +32,12 @@ module.exports = (app, offerService, commentService) => {
     return res.status(StatusCode.OK).json(offer);
   });
 
-  route.post(`/`, offerValidator, async (req, res) => {
+  route.post(`/`, schemaValidator(offerSchema), async (req, res) => {
     const offer = await offerService.create(req.body);
     return res.status(StatusCode.CREATED).json(offer);
   });
 
-  route.put(`/:offerId`, offerExist(offerService), offerValidator, async (req, res) => {
+  route.put(`/edit/:offerId`, offerExist(offerService), schemaValidator(offerSchema), async (req, res) => {
     const {offerId} = res.locals;
     const updatedOffer = await offerService.update(offerId, req.body);
     return res.status(StatusCode.OK).json(updatedOffer);
@@ -54,7 +55,7 @@ module.exports = (app, offerService, commentService) => {
     return res.status(StatusCode.OK).json(comments);
   });
 
-  route.post(`/:offerId/comments`, [offerExist(offerService), commentValidator], async (req, res) => {
+  route.post(`/:offerId/comments`, [offerExist(offerService), schemaValidator(commentSchema)], async (req, res) => {
     const {offer} = res.locals;
     const newComment = await commentService.create(offer.id, req.body);
     return res.status(StatusCode.CREATED).json(newComment);
