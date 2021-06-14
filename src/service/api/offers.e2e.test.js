@@ -79,10 +79,10 @@ describe(`API creates an offer if data is valid`, () => {
   let app;
   let response;
   const newOffer = {
-    category: [`Разное`],
-    description: `Описание`,
+    category: [1, 2],
+    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
-    title: `Загловок`,
+    title: `Lorem ipsum dolor sit amet`,
     type: `sale`,
     sum: 10000,
   };
@@ -109,10 +109,10 @@ describe(`API refuses to create an offer if data is invalid`, () => {
   });
 
   const newOffer = {
-    category: [`Разное`],
-    description: `Описание`,
+    category: [1, 2],
+    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
-    title: `Загловок`,
+    title: `Lorem ipsum dolor sit amet`,
     type: `sale`,
     sum: 10000,
   };
@@ -134,10 +134,10 @@ describe(`API changes existent offer`, () => {
   let app;
 
   const newOffer = {
-    category: [`Разное`],
-    description: `Описание`,
+    category: [1, 2],
+    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
-    title: `Загловок`,
+    title: `Lorem ipsum dolor sit amet`,
     type: `sale`,
     sum: 10000,
   };
@@ -145,23 +145,23 @@ describe(`API changes existent offer`, () => {
   beforeAll(async () => {
     app = await createAPI();
     response = await request(app)
-      .put(`/offers/1`)
+      .put(`/offers/edit/1`)
       .send(newOffer);
   });
 
   test(`Status code 200`, () => expect(response.statusCode).toBe(StatusCode.OK));
   test(`Offer is changed`, () => request(app)
     .get(`/offers/1`)
-    .expect((res) => expect(res.body.title).toBe(`Загловок`))
+    .expect((res) => expect(res.body.title).toBe(`Lorem ipsum dolor sit amet`))
   );
 });
 
 test(`Returns 404 for trying to change non-existent offer`, async () => {
   const validOffer = {
-    category: [`Разное`],
-    description: `Описание`,
+    category: [1, 2],
+    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
-    title: `Загловок`,
+    title: `Lorem ipsum dolor sit amet`,
     type: `sale`,
     sum: 10000,
   };
@@ -169,21 +169,21 @@ test(`Returns 404 for trying to change non-existent offer`, async () => {
   const app = await createAPI();
 
   return request(app)
-    .put(`/offers/asdf`)
+    .put(`/offers/edit/asdf`)
     .send(validOffer)
     .expect(StatusCode.NOT_FOUND);
 });
 
 test(`Returns 400 when invalid data is using to change offer`, async () => {
   const invalidOffer = {
-    title: `Загловок`,
+    title: `Lorem ipsum dolor sit amet`,
     sum: 10000,
   };
 
   const app = await createAPI();
 
   return request(app)
-    .put(`/offers/1`)
+    .put(`/offers/edit/1`)
     .send(invalidOffer)
     .expect(StatusCode.BAD_REQUEST);
 });
