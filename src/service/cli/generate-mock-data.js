@@ -97,7 +97,7 @@ const generate = async (count, isIds = false) => {
         description: shuffleArray(sentences).slice(DescriptionSentencesCount.MIN, DescriptionSentencesCount.MAX).join(` `),
         picture: getPictureFileName(getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX)),
         title: titles[getRandomInt(0, titles.length - 1)],
-        type: Object.keys(OfferType)[Math.floor(Math.random() * Object.keys(OfferType).length)],
+        type: Object.values(OfferType)[Math.floor(Math.random() * Object.values(OfferType).length)],
         sum: getRandomInt(SumRestrict.MIN, SumRestrict.MAX),
         comments: Array(getRandomInt(CommentsCount.MIN, CommentsCount.MAX)).fill({}).map(() => {
           return {

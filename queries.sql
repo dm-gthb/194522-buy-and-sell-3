@@ -85,7 +85,7 @@ ORDER BY comments.created_at DESC
 -- Выбрать 2 объявления, соответствующих типу «куплю»;
 SELECT *
 FROM offers
-WHERE offers.type = 'OFFER'
+WHERE offers.type = 'offer'
 LIMIT 2
 
 -- Обновить заголовок определённого объявления на «Уникальное предложение!»;
