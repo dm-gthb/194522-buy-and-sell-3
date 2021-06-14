@@ -72,7 +72,7 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   const offerData = {
     categories: ensureArray(body.categories),
     description: body.comment,
-    picture: file.filename,
+    picture: file ? file.filename : undefined,
     title: body[`ticket-name`],
     type: body.action,
     sum: body.price,
