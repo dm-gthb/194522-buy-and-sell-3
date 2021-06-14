@@ -3,10 +3,9 @@
 const {StatusCode} = require(`../../constants`);
 
 module.exports = (schema) => {
-  return async (req, res, next) => {
-    try {
-      await schema.validateAsync(req.body, {abortEarly: false});
-    } catch (error) {
+  return (req, res, next) => {
+    const {error} = schema.validate(req.body, {abortEarly: false});
+    if (error) {
       const errorsMessages = error.details.map((err) => err.message);
       return res.status(StatusCode.BAD_REQUEST).json(errorsMessages);
     }
