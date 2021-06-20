@@ -5,6 +5,6 @@ section.categories-list
       li.categories-list__item
         a.category-tile.category-tile--default(href=`/offers/category/${category.id}`)
           span.category-tile__image
-            img(src=`/img/cat0${index}.jpg` srcset=`/img/cat0${index}@2x.jpg 2x` alt="Иконка категории")
+            img(src=`/img/cat0${index + 1}.jpg` srcset=`/img/cat0${index + 1}@2x.jpg 2x` alt="Иконка категории")
           span.category-tile__label  #{category.name}&nbsp;
             span.category-tile__qty.js-qty  #{category.count}
