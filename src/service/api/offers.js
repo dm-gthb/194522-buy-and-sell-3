@@ -37,7 +37,7 @@ module.exports = (app, offerService, commentService) => {
     return res.status(StatusCode.CREATED).json(offer);
   });
 
-  route.put(`/edit/:offerId`, offerExist(offerService), schemaValidator(offerSchema), async (req, res) => {
+  route.put(`/edit/:offerId`, [offerExist(offerService), schemaValidator(offerSchema)], async (req, res) => {
     const {offerId} = res.locals;
     const updatedOffer = await offerService.update(offerId, req.body);
     return res.status(StatusCode.OK).json(updatedOffer);
