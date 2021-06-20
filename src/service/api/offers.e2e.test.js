@@ -69,10 +69,39 @@ describe(`API creates an offer if data is valid`, () => {
   });
 
   test(`Returns statusCode 201`, () => expect(response.statusCode).toBe(StatusCode.CREATED));
+
   test(`Offers quantity increases by 1`, () => request(app)
     .get(`/offers`)
     .expect((res) => expect(res.body.length).toBe(2))
   );
+
+  test(`When field type is wrong response code is 400`, async () => {
+    const badOffers = [
+      {...newOffer, sum: true},
+      {...newOffer, picture: 1},
+      {...newOffer, categories: `asdf`}
+    ];
+    for (const badOffer of badOffers) {
+      await request(app)
+        .post(`/offers`)
+        .send(badOffer)
+        .expect(StatusCode.BAD_REQUEST);
+    }
+  });
+
+  test(`When field value is wrong response code is 400`, async () => {
+    const badOffers = [
+      {...newOffer, sum: -1},
+      {...newOffer, title: `too short`},
+      {...newOffer, categories: []}
+    ];
+    for (const badOffer of badOffers) {
+      await request(app)
+        .post(`/offers`)
+        .send(badOffer)
+        .expect(StatusCode.BAD_REQUEST);
+    }
+  });
 });
 
 describe(`API returns list of all offers`, () => {
