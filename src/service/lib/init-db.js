@@ -37,7 +37,7 @@ module.exports = async (sequelize, data) => {
 
     const offersPromises = offers.map(async (offer) => {
       const offerModel = await Offer.create(offer, {include: [Aliase.COMMENTS]});
-      await offerModel.addCategories(transformCategoriesNamesToIds(offer.category, categoryNameToIdMap));
+      await offerModel.addCategories(transformCategoriesNamesToIds(offer.categories, categoryNameToIdMap));
     });
 
     await Promise.all(usersPromises);

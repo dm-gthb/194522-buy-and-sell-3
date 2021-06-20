@@ -16,7 +16,7 @@ const mockCategories = [
 
 const mockOffers = [
   {
-    "category": [
+    "categories": [
       `Игры`,
       `Журналы`
     ],
@@ -48,11 +48,39 @@ const createAPI = async () => {
   return app;
 };
 
-describe(`API returns list of all offers`, () => {
+describe(`API creates an offer if data is valid`, () => {
+  let app;
   let response;
 
+  const newOffer = {
+    categories: [1, 2],
+    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
+    picture: `mock.png`,
+    title: `Lorem ipsum dolor sit amet`,
+    type: `sale`,
+    sum: 10000,
+  };
+
   beforeAll(async () => {
-    const app = await createAPI();
+    app = await createAPI();
+    response = await request(app)
+      .post(`/offers`)
+      .send(newOffer);
+  });
+
+  test(`Returns statusCode 201`, () => expect(response.statusCode).toBe(StatusCode.CREATED));
+  test(`Offers quantity increases by 1`, () => request(app)
+    .get(`/offers`)
+    .expect((res) => expect(res.body.length).toBe(2))
+  );
+});
+
+describe(`API returns list of all offers`, () => {
+  let response;
+  let app;
+
+  beforeAll(async () => {
+    app = await createAPI();
     response = await request(app)
       .get(`/offers`);
   });
@@ -75,32 +103,6 @@ describe(`API returns an offer with given id`, () => {
   test(`Offer's title is "Куплю антиквариат"`, () => expect(response.body.title).toBe(`Куплю антиквариат`));
 });
 
-describe(`API creates an offer if data is valid`, () => {
-  let app;
-  let response;
-  const newOffer = {
-    category: [1, 2],
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
-    picture: `mock.png`,
-    title: `Lorem ipsum dolor sit amet`,
-    type: `sale`,
-    sum: 10000,
-  };
-
-  beforeAll(async () => {
-    app = await createAPI();
-    response = await request(app)
-      .post(`/offers`)
-      .send(newOffer);
-  });
-
-  test(`Returns statusCode 201`, () => expect(response.statusCode).toBe(StatusCode.CREATED));
-  test(`Offers quantity increases by 1`, () => request(app)
-    .get(`/offers`)
-    .expect((res) => expect(res.body.length).toBe(2))
-  );
-});
-
 describe(`API refuses to create an offer if data is invalid`, () => {
   let app;
 
@@ -109,7 +111,7 @@ describe(`API refuses to create an offer if data is invalid`, () => {
   });
 
   const newOffer = {
-    category: [1, 2],
+    categories: [1, 2],
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
     title: `Lorem ipsum dolor sit amet`,
@@ -134,7 +136,7 @@ describe(`API changes existent offer`, () => {
   let app;
 
   const newOffer = {
-    category: [1, 2],
+    categories: [1, 2],
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
     title: `Lorem ipsum dolor sit amet`,
@@ -158,7 +160,7 @@ describe(`API changes existent offer`, () => {
 
 test(`Returns 404 for trying to change non-existent offer`, async () => {
   const validOffer = {
-    category: [1, 2],
+    categories: [1, 2],
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
     title: `Lorem ipsum dolor sit amet`,

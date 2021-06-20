@@ -16,7 +16,7 @@ const mockCategories = [
 
 const mockOffers = [
   {
-    "category": [
+    "categories": [
       `Игры`,
       `Журналы`
     ],

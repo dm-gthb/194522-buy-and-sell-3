@@ -93,7 +93,7 @@ const generate = async (count, isIds = false) => {
     const offers = Array(offersQuantity).fill({}).map(() => {
       return {
         userId: getRandomInt(1, mockUsers.length),
-        category: shuffleArray(categories).slice(0, getRandomInt(MIN_CATEGORIES_QUANTITY, categories.length - 1)),
+        categories: shuffleArray(categories).slice(0, getRandomInt(MIN_CATEGORIES_QUANTITY, categories.length - 1)),
         description: shuffleArray(sentences).slice(DescriptionSentencesCount.MIN, DescriptionSentencesCount.MAX).join(` `),
         picture: getPictureFileName(getRandomInt(PictureRestrict.MIN, PictureRestrict.MAX)),
         title: titles[getRandomInt(0, titles.length - 1)],
