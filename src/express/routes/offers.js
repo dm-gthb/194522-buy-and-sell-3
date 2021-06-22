@@ -6,6 +6,7 @@ const multer = require(`multer`);
 const {nanoid} = require(`nanoid`);
 const {OFFERS_PER_PAGE} = require(`../../constants`);
 const {ensureArray} = require(`../../utils`);
+const routeParamsValidator = require(`../middlewares/route-params-validator`);
 const api = require(`../api`).getAPI();
 
 const UPLOAD_DIR = `../upload/img/`;
@@ -30,8 +31,8 @@ offersRouter.get(`/add`, async (req, res) => {
   res.render(`offers/new-ticket`, {categories, error});
 });
 
-offersRouter.get(`/edit/:id`, async (req, res) => {
-  const {id} = req.params;
+offersRouter.get(`/edit/:offerId`, routeParamsValidator, async (req, res) => {
+  const {offerId: id} = req.params;
   const {error} = req.query;
   const [offer, categories] = await Promise.all([
     api.getOffer(id, {isWithComments: false}),
@@ -40,19 +41,19 @@ offersRouter.get(`/edit/:id`, async (req, res) => {
   res.render(`offers/ticket-edit`, {offer, categories, error, id});
 });
 
-offersRouter.get(`/:id`, async (req, res) => {
-  const {id} = req.params;
+offersRouter.get(`/:offerId`, routeParamsValidator, async (req, res) => {
+  const {offerId: id} = req.params;
   const {error} = req.query;
   const offer = await api.getOffer(id, {isWithComments: true});
   res.render(`offers/ticket`, {offer, id, error});
 });
 
-offersRouter.get(`/category/:id`, async (req, res) => {
+offersRouter.get(`/category/:categoryId`, routeParamsValidator, async (req, res) => {
   const page = parseInt(req.query.page, 10) || 1;
   const limit = OFFERS_PER_PAGE;
   const offset = (page - 1) * OFFERS_PER_PAGE;
 
-  const {id} = req.params;
+  const {categoryId: id} = req.params;
   const [
     {count, offers},
     categories,
@@ -85,9 +86,9 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   }
 });
 
-offersRouter.post(`/edit/:id`, upload.single(`avatar`), async (req, res) => {
+offersRouter.post(`/edit/:offerId`, upload.single(`avatar`), routeParamsValidator, async (req, res) => {
   const {body, file} = req;
-  const {id} = req.params;
+  const {offerId: id} = req.params;
   const offerData = {
     categories: ensureArray(body.categories),
     description: body.comment,
@@ -104,8 +105,8 @@ offersRouter.post(`/edit/:id`, upload.single(`avatar`), async (req, res) => {
   }
 });
 
-offersRouter.post(`/:id/comments`, async (req, res) => {
-  const {id} = req.params;
+offersRouter.post(`/:offerId/comments`, routeParamsValidator, async (req, res) => {
+  const {offerId: id} = req.params;
   try {
     await api.createComment(id, {text: req.body.comment});
     res.redirect(`/offers/${id}`);
