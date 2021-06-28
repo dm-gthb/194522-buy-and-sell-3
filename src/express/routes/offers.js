@@ -2,28 +2,18 @@
 
 const {Router} = require(`express`);
 const path = require(`path`);
-const multer = require(`multer`);
 const {nanoid} = require(`nanoid`);
 const {OFFERS_PER_PAGE} = require(`../../constants`);
-const {ensureArray} = require(`../../utils`);
+const {ensureArray, createStorage} = require(`../../utils`);
 const routeParamsValidator = require(`../middlewares/route-params-validator`);
 const api = require(`../api`).getAPI();
 
 const UPLOAD_DIR = `../upload/img/`;
+const UNIQUE_NAME_LENGTH = 10;
 
 const offersRouter = new Router();
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
-
-const storage = multer.diskStorage({
-  destination: uploadDirAbsolute,
-  filename: (req, file, cb) => {
-    const uniqueName = nanoid(10);
-    const extension = file.originalname.split(`.`).pop();
-    cb(null, `${uniqueName}.${extension}`);
-  }
-});
-
-const upload = multer({storage});
+const upload = createStorage(uploadDirAbsolute, nanoid(UNIQUE_NAME_LENGTH));
 
 offersRouter.get(`/add`, async (req, res) => {
   const {error} = req.query;

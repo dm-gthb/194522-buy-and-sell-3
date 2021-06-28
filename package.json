@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "axios": "0.21.0",
+    "bcrypt": "5.0.1",
     "chalk": "3.0.0",
     "cross-env": "7.0.2",
     "dotenv": "9.0.1",

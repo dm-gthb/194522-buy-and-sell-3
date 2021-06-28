@@ -5,6 +5,7 @@ const Aliase = require(`../models/aliase`);
 class OfferService {
   constructor(sequelize) {
     this._Offer = sequelize.models.Offer;
+    this._User = sequelize.models.User;
     this._Comment = sequelize.models.Comment;
     this._Category = sequelize.models.Category;
     this._OfferCategory = sequelize.models.OfferCategory;
@@ -23,18 +24,58 @@ class OfferService {
     return !!deletedRows;
   }
 
-  findOne(id, isWithComments) {
-    const include = [Aliase.CATEGORIES];
+  async findOne(id, isWithComments) {
+    const include = [
+      Aliase.CATEGORIES,
+      {
+        model: this._User,
+        as: Aliase.USER,
+        attributes: {
+          exclude: [`passwordHash`],
+        }
+      }
+    ];
     if (isWithComments) {
-      include.push(Aliase.COMMENTS);
+      include.push({
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        include: {
+          model: this._User,
+          as: Aliase.USER,
+          attributes: {
+            exclude: [`passwordHash`],
+          }
+        }
+      });
     }
-    return this._Offer.findByPk(id, {include});
+
+    const offer = await this._Offer.findByPk(id, {include});
+    return offer;
   }
 
   async findAll(isWithComments) {
-    const include = [Aliase.CATEGORIES];
+    const include = [
+      Aliase.CATEGORIES,
+      {
+        model: this._User,
+        as: Aliase.USER,
+        attributes: {
+          exclude: [`passwordHash`],
+        }
+      }
+    ];
     if (isWithComments) {
-      include.push(Aliase.COMMENTS);
+      include.push({
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        include: {
+          model: this._User,
+          as: Aliase.USER,
+          attributes: {
+            exclude: [`passwordHash`],
+          }
+        }
+      });
     }
     const offers = await this._Offer.findAll({include});
     return offers.map((item) => item.get());
@@ -61,7 +102,16 @@ class OfferService {
     const {count, rows} = await this._Offer.findAndCountAll({
       limit,
       offset,
-      include: [Aliase.CATEGORIES],
+      include: [
+        Aliase.CATEGORIES,
+        {
+          model: this._User,
+          as: Aliase.USER,
+          attributes: {
+            exclude: [`passwordHash`],
+          }
+        }
+      ],
       distinct: true
     });
     return {count, offers: rows};

@@ -14,10 +14,10 @@ const define = (sequelize) => {
   const User = defineUser(sequelize);
 
   User.hasMany(Offer, {as: Aliase.OFFERS, foreignKey: `userId`});
-  Offer.belongsTo(User, {foreignKey: `userId`});
+  Offer.belongsTo(User, {as: Aliase.USER, foreignKey: `userId`});
 
   User.hasMany(Comment, {as: Aliase.COMMENTS, foreignKey: `userId`});
-  Comment.belongsTo(User, {foreignKey: `userId`});
+  Comment.belongsTo(User, {as: Aliase.USER, foreignKey: `userId`});
 
   Offer.hasMany(Comment, {as: Aliase.COMMENTS, foreignKey: `offerId`});
   Comment.belongsTo(Offer, {foreignKey: `offerId`});

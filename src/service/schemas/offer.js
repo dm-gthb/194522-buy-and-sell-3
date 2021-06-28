@@ -21,6 +21,8 @@ const CATEGORIES_MIN_COUNT = 1;
 const MIN_SUM = 100;
 
 module.exports = Joi.object({
+  userId: Joi.number().integer().positive().required(),
+
   categories: Joi.array()
     .items(Joi.number().integer().positive())
     .min(CATEGORIES_MIN_COUNT)

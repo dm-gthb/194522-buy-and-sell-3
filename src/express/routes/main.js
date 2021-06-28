@@ -1,8 +1,16 @@
 'use strict';
 
 const {Router} = require(`express`);
+const path = require(`path`);
+const {nanoid} = require(`nanoid`);
 const {OFFERS_PER_PAGE} = require(`../../constants`);
+const {createStorage} = require(`../../utils`);
 const api = require(`../api`).getAPI();
+
+const UPLOAD_DIR = `../upload/img/`;
+const UNIQUE_NAME_LENGTH = 10;
+const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
+const upload = createStorage(uploadDirAbsolute, nanoid(UNIQUE_NAME_LENGTH));
 
 const mainRouter = new Router();
 
@@ -23,7 +31,11 @@ mainRouter.get(`/`, async (req, res) => {
   res.render(`main`, {offers, categories, page, totalPagesCount});
 });
 
-mainRouter.get(`/register`, (req, res) => res.render(`sign-up`));
+mainRouter.get(`/register`, (req, res) => {
+  const {error} = req.query;
+  res.render(`sign-up`, {error});
+});
+
 mainRouter.get(`/login`, (req, res) => res.render(`login`));
 
 mainRouter.get(`/search`, async (req, res) => {
@@ -33,6 +45,25 @@ mainRouter.get(`/search`, async (req, res) => {
     res.render(`search-result`, {searchResults});
   } catch (err) {
     res.render(`search-result`, {searchResults: []});
+  }
+});
+
+mainRouter.post(`/user`, upload.single(`avatar`), async (req, res) => {
+  const {body, file} = req;
+
+  const userData = {
+    email: body[`user-email`],
+    name: body[`user-name`],
+    password: body[`user-password`],
+    passwordRepeated: body[`user-password-again`],
+    avatar: file ? file.filename : undefined,
+  };
+
+  try {
+    await api.createUser(userData);
+    res.redirect(`/login`);
+  } catch (error) {
+    res.redirect(`/register?error=${encodeURIComponent(error.response.data)}`);
   }
 });
 
