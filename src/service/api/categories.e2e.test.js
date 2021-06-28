@@ -8,6 +8,21 @@ const categories = require(`./categories`);
 const {CategoryService} = require(`../data-service`);
 const initDb = require(`../lib/init-db`);
 
+const mockUsers = [
+  {
+    name: `Ivan Ivanov`,
+    email: `ivan@ivan.ivan`,
+    passwordHash: `123456`,
+    avatar: `img.jpg`,
+  },
+  {
+    name: `Petr Petrov`,
+    email: `petr@petr.petr`,
+    passwordHash: `123456`,
+    avatar: `img.jpg`,
+  },
+];
+
 const mockCategories = [
   `Журналы`,
   `Игры`,
@@ -16,18 +31,22 @@ const mockCategories = [
 
 const mockOffers = [
   {
+    "userId": 1,
     "categories": [
       `Игры`,
       `Журналы`
     ],
     "comments": [
       {
+        "userId": 1,
         "text": `С чем связана продажа? Почему так дешёво? Неплохо, но дорого. А где блок питания?`
       },
       {
+        "userId": 1,
         "text": `А где блок питания?`
       },
       {
+        "userId": 1,
         "text": `Оплата наличными или перевод на карту? Неплохо, но дорого. Почему в таком ужасном состоянии?`
       }
     ],
@@ -45,7 +64,7 @@ const app = express();
 app.use(express.json());
 
 beforeAll(async () => {
-  await initDb(mockDb, {categories: mockCategories, offers: mockOffers, users: []});
+  await initDb(mockDb, {categories: mockCategories, offers: mockOffers, users: mockUsers});
   categories(app, new CategoryService(mockDb));
 });
 

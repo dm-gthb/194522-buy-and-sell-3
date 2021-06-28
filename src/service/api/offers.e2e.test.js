@@ -8,6 +8,21 @@ const {OfferService, CommentService} = require(`../data-service`);
 const {StatusCode} = require(`../../constants`);
 const initDb = require(`../lib/init-db`);
 
+const mockUsers = [
+  {
+    name: `Ivan Ivanov`,
+    email: `ivan@ivan.ivan`,
+    passwordHash: `123456`,
+    avatar: `img.jpg`,
+  },
+  {
+    name: `Petr Petrov`,
+    email: `petr@petr.petr`,
+    passwordHash: `123456`,
+    avatar: `img.jpg`,
+  },
+];
+
 const mockCategories = [
   `Журналы`,
   `Игры`,
@@ -16,18 +31,22 @@ const mockCategories = [
 
 const mockOffers = [
   {
+    "userId": 1,
     "categories": [
       `Игры`,
       `Журналы`
     ],
     "comments": [
       {
+        "userId": 1,
         "text": `С чем связана продажа? Почему так дешёво? Неплохо, но дорого. А где блок питания?`
       },
       {
+        "userId": 1,
         "text": `А где блок питания?`
       },
       {
+        "userId": 1,
         "text": `Оплата наличными или перевод на карту? Неплохо, но дорого. Почему в таком ужасном состоянии?`
       }
     ],
@@ -41,7 +60,7 @@ const mockOffers = [
 
 const createAPI = async () => {
   const mockDb = new Sequelize(`sqlite::memory:`, {logging: false});
-  await initDb(mockDb, {categories: mockCategories, offers: mockOffers, users: []});
+  await initDb(mockDb, {categories: mockCategories, offers: mockOffers, users: mockUsers});
   const app = express();
   app.use(express.json());
   offers(app, new OfferService(mockDb), new CommentService(mockDb));
@@ -53,6 +72,7 @@ describe(`API creates an offer if data is valid`, () => {
   let response;
 
   const newOffer = {
+    userId: 1,
     categories: [1, 2],
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
@@ -140,6 +160,7 @@ describe(`API refuses to create an offer if data is invalid`, () => {
   });
 
   const newOffer = {
+    userId: 1,
     categories: [1, 2],
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
@@ -165,6 +186,7 @@ describe(`API changes existent offer`, () => {
   let app;
 
   const newOffer = {
+    userId: 1,
     categories: [1, 2],
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
@@ -189,6 +211,7 @@ describe(`API changes existent offer`, () => {
 
 test(`Returns 404 for trying to change non-existent offer`, async () => {
   const validOffer = {
+    userId: 1,
     categories: [1, 2],
     description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Et sequi, culpa voluptates nostrum, ipsam eligendi iure ipsum magnam mollitia dolores ullam quaerat dolorum facere saepe soluta accusantium? Facilis sed voluptatum dolorum! Ad adipisci libero omnis vel corporis, maxime, eveniet in esse provident a neque pariatur animi nihil aspernatur. Mollitia doloremque aperiam autem quo cumque soluta tenetur temporibus! Exercitationem, ab omnis?`,
     picture: `mock.png`,
@@ -262,6 +285,7 @@ describe(`API returns a list of comments to given offer`, () => {
 
 describe(`API creates a comment if data is valid`, () => {
   const newComment = {
+    userId: 1,
     text: `Валидному комментарию достаточно этого поля`
   };
 
