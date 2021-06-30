@@ -15,19 +15,19 @@ block content
                 span.sign-up__text-upload Загрузить аватар…
                 span.sign-up__text-another Загрузить другой аватар…
           .form__field.sign-up__field
-            input#user-name.js-field(type="text" name="user-name" required="")
+            input#user-name.js-field(type="text" name="user-name" required="" value=userData && userData.name ? userData.name : '')
             label(for="user-name") Имя и фамилия
             span Обязательное поле
           .form__field.sign-up__field
-            input#user-email.js-field(type="email" name="user-email" required="")
+            input#user-email.js-field(type="email" name="user-email" required="" value=userData && userData.email ? userData.email : '')
             label(for="user-email") Эл. почта
             span Обязательное поле
           .form__field.sign-up__field
-            input#user-password.js-field(type="password" name="user-password" required="")
+            input#user-password.js-field(type="password" name="user-password" required="" value=userData && userData.password ? userData.password : '')
             label(for="user-password") Пароль
             span Обязательное поле
           .form__field.sign-up__field
-            input#user-password-again.js-field(type="password" name="user-password-again" required="")
+            input#user-password-again.js-field(type="password" name="user-password-again" required="" value=userData && userData.passwordRepeated ? userData.passwordRepeated : '')
             label(for="user-password-again") Пароль еще раз
             span Обязательное поле
           +validationErrorMessage(error)

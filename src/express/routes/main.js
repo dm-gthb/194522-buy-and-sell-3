@@ -32,8 +32,7 @@ mainRouter.get(`/`, async (req, res) => {
 });
 
 mainRouter.get(`/register`, (req, res) => {
-  const {error} = req.query;
-  res.render(`sign-up`, {error});
+  res.render(`sign-up`);
 });
 
 mainRouter.get(`/login`, (req, res) => res.render(`login`));
@@ -63,7 +62,7 @@ mainRouter.post(`/user`, upload.single(`avatar`), async (req, res) => {
     await api.createUser(userData);
     res.redirect(`/login`);
   } catch (error) {
-    res.redirect(`/register?error=${encodeURIComponent(error.response.data)}`);
+    res.render(`sign-up`, {error: error.response.data, userData});
   }
 });
 
