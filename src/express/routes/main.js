@@ -28,14 +28,34 @@ mainRouter.get(`/`, async (req, res) => {
   ]);
 
   const totalPagesCount = Math.ceil(count / OFFERS_PER_PAGE);
-  res.render(`main`, {offers, categories, page, totalPagesCount});
+  const {user} = req.session;
+  res.render(`main`, {offers, categories, page, totalPagesCount, user});
 });
 
 mainRouter.get(`/register`, (req, res) => {
   res.render(`sign-up`);
 });
 
-mainRouter.get(`/login`, (req, res) => res.render(`login`));
+mainRouter.get(`/login`, (req, res) => {
+  res.render(`login`);
+});
+
+mainRouter.get(`/logout`, (req, res) => {
+  delete req.session.user;
+  res.redirect(`/login`);
+});
+
+mainRouter.post(`/login`, async (req, res) => {
+  const email = req.body[`user-email`];
+  const password = req.body[`user-password`];
+  try {
+    const user = await api.authenticateUser(email, password);
+    req.session.user = user;
+    res.redirect(`/`);
+  } catch (error) {
+    res.render(`login`, {error: error.response.data});
+  }
+});
 
 mainRouter.get(`/search`, async (req, res) => {
   try {

@@ -71,6 +71,13 @@ class API {
       data
     });
   }
+
+  authenticateUser(email, password) {
+    return this._load(`/user/login`, {
+      method: HttpMethod.POST,
+      data: {email, password}
+    });
+  }
 }
 
 const defaultAPI = new API(defaultURL, TIMEOUT);

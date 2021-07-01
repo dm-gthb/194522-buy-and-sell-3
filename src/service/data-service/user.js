@@ -1,5 +1,7 @@
 'use strict';
 
+const passwordUtils = require(`../lib/password`);
+
 class User {
   constructor(sequelize) {
     this._sequelize = sequelize;
@@ -17,6 +19,11 @@ class User {
     });
 
     return user ? user.get() : null;
+  }
+
+  async checkUserPassword(password, userDbData) {
+    const isPasswordMatch = await passwordUtils.compare(password, userDbData.passwordHash);
+    return isPasswordMatch;
   }
 }
 

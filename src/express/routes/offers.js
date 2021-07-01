@@ -6,6 +6,7 @@ const {nanoid} = require(`nanoid`);
 const {OFFERS_PER_PAGE} = require(`../../constants`);
 const {ensureArray, createStorage} = require(`../../utils`);
 const routeParamsValidator = require(`../middlewares/route-params-validator`);
+const privateRoute = require(`../middlewares/private-route`);
 const api = require(`../api`).getAPI();
 
 const UPLOAD_DIR = `../upload/img/`;
@@ -15,27 +16,30 @@ const offersRouter = new Router();
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
 const upload = createStorage(uploadDirAbsolute, nanoid(UNIQUE_NAME_LENGTH));
 
-offersRouter.get(`/add`, async (req, res) => {
+offersRouter.get(`/add`, privateRoute, async (req, res) => {
   const {error} = req.query;
+  const {user} = req.session;
   const categories = await api.getCategories();
-  res.render(`offers/new-ticket`, {categories, error});
+  res.render(`offers/new-ticket`, {categories, user, error});
 });
 
-offersRouter.get(`/edit/:offerId`, routeParamsValidator, async (req, res) => {
+offersRouter.get(`/edit/:offerId`, privateRoute, routeParamsValidator, async (req, res) => {
   const {offerId: id} = req.params;
   const {error} = req.query;
+  const {user} = req.session;
   const [offer, categories] = await Promise.all([
     api.getOffer(id, {isWithComments: false}),
     api.getCategories()
   ]);
-  res.render(`offers/ticket-edit`, {offer, categories, error, id});
+  res.render(`offers/ticket-edit`, {offer, user, categories, error, id});
 });
 
 offersRouter.get(`/:offerId`, routeParamsValidator, async (req, res) => {
   const {offerId: id} = req.params;
+  const {user} = req.session;
   const {error} = req.query;
   const offer = await api.getOffer(id, {isWithComments: true});
-  res.render(`offers/ticket`, {offer, id, error});
+  res.render(`offers/ticket`, {offer, user, id, error});
 });
 
 offersRouter.get(`/category/:categoryId`, routeParamsValidator, async (req, res) => {
@@ -55,7 +59,8 @@ offersRouter.get(`/category/:categoryId`, routeParamsValidator, async (req, res)
   ]);
 
   const totalPagesCount = Math.ceil(count / OFFERS_PER_PAGE);
-  res.render(`category`, {count, offers, categories, category, page, totalPagesCount});
+  const {user} = req.session;
+  res.render(`category`, {count, offers, categories, category, page, totalPagesCount, user});
 });
 
 offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {

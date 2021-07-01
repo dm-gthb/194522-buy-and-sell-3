@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require(`express`);
+const expressSession = require(`express-session`);
 const path = require(`path`);
 const mainRoutes = require(`./routes/main`);
 const myRoutes = require(`./routes/my`);
@@ -19,6 +20,12 @@ app.use(express.static(path.resolve(__dirname, PUBLIC_DIR)));
 app.use(express.static(path.resolve(__dirname, UPLOAD_DIR)));
 
 app.use(express.urlencoded({extended: false}));
+
+app.use(expressSession({
+  secret: `SECRET`,
+  resave: false,
+  saveUninitialized: false,
+}));
 
 app.use(`/`, mainRoutes);
 app.use(`/my`, myRoutes);
