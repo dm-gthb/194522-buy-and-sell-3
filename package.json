@@ -10,7 +10,7 @@
     "jest": "jest",
     "start": "cross-env NODE_ENV=production node -r dotenv/config ./src/service/service.js",
     "start::debug": "cross-env NODE_ENV=development nodemon -r dotenv/config ./src/service/service.js",
-    "start-front-server": "nodemon ./src/express/index.js"
+    "start-front-server": "nodemon -r dotenv/config ./src/express/index.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,7 @@
     "axios": "0.21.0",
     "bcrypt": "5.0.1",
     "chalk": "3.0.0",
+    "connect-session-sequelize": "7.1.1",
     "cross-env": "7.0.2",
     "dotenv": "9.0.1",
     "express": "4.17.1",
