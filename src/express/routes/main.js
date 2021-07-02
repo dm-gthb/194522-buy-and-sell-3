@@ -58,12 +58,13 @@ mainRouter.post(`/login`, async (req, res) => {
 });
 
 mainRouter.get(`/search`, async (req, res) => {
+  const {user} = req.session;
   try {
     const {title} = req.query;
     const searchResults = await api.search(title);
-    res.render(`search-result`, {searchResults});
+    res.render(`search-result`, {searchResults, user});
   } catch (err) {
-    res.render(`search-result`, {searchResults: []});
+    res.render(`search-result`, {searchResults: [], user});
   }
 });
 

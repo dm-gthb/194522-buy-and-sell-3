@@ -65,9 +65,11 @@ offersRouter.get(`/category/:categoryId`, routeParamsValidator, async (req, res)
   res.render(`category`, {count, offers, categories, category, page, totalPagesCount, user});
 });
 
-offersRouter.post(`/add`, upload.single(`avatar`), csrfProtection, async (req, res) => {
+offersRouter.post(`/add`, privateRoute, upload.single(`avatar`), csrfProtection, async (req, res) => {
   const {body, file} = req;
+  const {user} = req.session;
   const offerData = {
+    userId: user.id,
     categories: ensureArray(body.categories),
     description: body.comment,
     picture: file ? file.filename : undefined,
@@ -83,10 +85,12 @@ offersRouter.post(`/add`, upload.single(`avatar`), csrfProtection, async (req, r
   }
 });
 
-offersRouter.post(`/edit/:offerId`, upload.single(`avatar`), csrfProtection, routeParamsValidator, async (req, res) => {
+offersRouter.post(`/edit/:offerId`, privateRoute, upload.single(`avatar`), csrfProtection, routeParamsValidator, async (req, res) => {
   const {body, file} = req;
   const {offerId: id} = req.params;
+  const {user} = req.session;
   const offerData = {
+    userId: user.id,
     categories: ensureArray(body.categories),
     description: body.comment,
     picture: file ? file.filename : body[`old-image`],
@@ -102,10 +106,12 @@ offersRouter.post(`/edit/:offerId`, upload.single(`avatar`), csrfProtection, rou
   }
 });
 
-offersRouter.post(`/:offerId/comments`, routeParamsValidator, csrfProtection, async (req, res) => {
+offersRouter.post(`/:offerId/comments`, privateRoute, routeParamsValidator, csrfProtection, async (req, res) => {
+  const {user} = req.session;
+  const {comment} = req.body;
   const {offerId: id} = req.params;
   try {
-    await api.createComment(id, {text: req.body.comment});
+    await api.createComment(id, {userId: user.id, text: comment});
     res.redirect(`/offers/${id}`);
   } catch (error) {
     res.redirect(`/offers/${id}?error=${encodeURIComponent(error.response.data)}`);
