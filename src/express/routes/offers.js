@@ -3,6 +3,7 @@
 const {Router} = require(`express`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
+const csrf = require(`csurf`);
 const {OFFERS_PER_PAGE} = require(`../../constants`);
 const {ensureArray, createStorage} = require(`../../utils`);
 const routeParamsValidator = require(`../middlewares/route-params-validator`);
@@ -12,18 +13,19 @@ const api = require(`../api`).getAPI();
 const UPLOAD_DIR = `../upload/img/`;
 const UNIQUE_NAME_LENGTH = 10;
 
+const csrfProtection = csrf();
 const offersRouter = new Router();
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
 const upload = createStorage(uploadDirAbsolute, nanoid(UNIQUE_NAME_LENGTH));
 
-offersRouter.get(`/add`, privateRoute, async (req, res) => {
+offersRouter.get(`/add`, csrfProtection, privateRoute, async (req, res) => {
   const {error} = req.query;
   const {user} = req.session;
   const categories = await api.getCategories();
-  res.render(`offers/new-ticket`, {categories, user, error});
+  res.render(`offers/new-ticket`, {categories, user, error, csrfToken: req.csrfToken()});
 });
 
-offersRouter.get(`/edit/:offerId`, privateRoute, routeParamsValidator, async (req, res) => {
+offersRouter.get(`/edit/:offerId`, privateRoute, routeParamsValidator, csrfProtection, async (req, res) => {
   const {offerId: id} = req.params;
   const {error} = req.query;
   const {user} = req.session;
@@ -31,15 +33,15 @@ offersRouter.get(`/edit/:offerId`, privateRoute, routeParamsValidator, async (re
     api.getOffer(id, {isWithComments: false}),
     api.getCategories()
   ]);
-  res.render(`offers/ticket-edit`, {offer, user, categories, error, id});
+  res.render(`offers/ticket-edit`, {offer, user, categories, error, id, csrfToken: req.csrfToken()});
 });
 
-offersRouter.get(`/:offerId`, routeParamsValidator, async (req, res) => {
+offersRouter.get(`/:offerId`, routeParamsValidator, csrfProtection, async (req, res) => {
   const {offerId: id} = req.params;
   const {user} = req.session;
   const {error} = req.query;
   const offer = await api.getOffer(id, {isWithComments: true});
-  res.render(`offers/ticket`, {offer, user, id, error});
+  res.render(`offers/ticket`, {offer, user, id, error, csrfToken: req.csrfToken()});
 });
 
 offersRouter.get(`/category/:categoryId`, routeParamsValidator, async (req, res) => {
@@ -63,7 +65,7 @@ offersRouter.get(`/category/:categoryId`, routeParamsValidator, async (req, res)
   res.render(`category`, {count, offers, categories, category, page, totalPagesCount, user});
 });
 
-offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
+offersRouter.post(`/add`, upload.single(`avatar`), csrfProtection, async (req, res) => {
   const {body, file} = req;
   const offerData = {
     categories: ensureArray(body.categories),
@@ -81,7 +83,7 @@ offersRouter.post(`/add`, upload.single(`avatar`), async (req, res) => {
   }
 });
 
-offersRouter.post(`/edit/:offerId`, upload.single(`avatar`), routeParamsValidator, async (req, res) => {
+offersRouter.post(`/edit/:offerId`, upload.single(`avatar`), csrfProtection, routeParamsValidator, async (req, res) => {
   const {body, file} = req;
   const {offerId: id} = req.params;
   const offerData = {
@@ -100,7 +102,7 @@ offersRouter.post(`/edit/:offerId`, upload.single(`avatar`), routeParamsValidato
   }
 });
 
-offersRouter.post(`/:offerId/comments`, routeParamsValidator, async (req, res) => {
+offersRouter.post(`/:offerId/comments`, routeParamsValidator, csrfProtection, async (req, res) => {
   const {offerId: id} = req.params;
   try {
     await api.createComment(id, {text: req.body.comment});

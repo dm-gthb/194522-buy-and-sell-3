@@ -44,5 +44,6 @@ block content
                   .switch__item
                     input#sell-field.visually-hidden(type="radio" name="action" value="sale" checked=(offer.type === 'sale'))
                     label.switch__button(for="sell-field") Продам
+            input(type="hidden" name="_csrf" value=csrfToken)
             +validationErrorMessage(error)
             button.form__button.btn.btn--medium.js-button(type="submit") Сохранить
