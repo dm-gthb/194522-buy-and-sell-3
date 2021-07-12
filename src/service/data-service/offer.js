@@ -85,17 +85,31 @@ class OfferService {
     const {count, rows} = await this._Offer.findAndCountAll({
       limit,
       offset,
-      include: [{
-        model: this._OfferCategory,
-        as: Aliase.OFFER_CATEGORIES,
-        attributes: [],
-        where: {
-          CategoryId: categoryId
+      include: [
+        Aliase.CATEGORIES,
+        {
+          model: this._OfferCategory,
+          as: Aliase.OFFER_CATEGORIES,
+          attributes: [],
+          where: {
+            CategoryId: categoryId
+          },
         },
-        distinct: true
-      }],
+      ],
+      distinct: true,
     });
     return {count, offers: rows};
+  }
+
+  async findByUser(userId) {
+    const offersByUser = await this._Offer.findAll({
+      include: [Aliase.CATEGORIES],
+      where: {
+        userId,
+      },
+      order: [[`createdAt`, `DESC`]],
+    });
+    return offersByUser.map((offer) => offer.get());
   }
 
   async findPage(limit, offset) {
@@ -112,6 +126,7 @@ class OfferService {
           }
         }
       ],
+      order: [[`createdAt`, `DESC`]],
       distinct: true
     });
     return {count, offers: rows};

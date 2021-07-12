@@ -1,6 +1,7 @@
 'use strict';
 
 const Sequelize = require(`sequelize`);
+const {Op} = require(`sequelize`);
 const Aliase = require(`../models/aliase`);
 
 class CategoryService {
@@ -32,7 +33,13 @@ class CategoryService {
           model: this._OfferCategory,
           as: Aliase.OFFER_CATEGORIES,
           attributes: []
-        }]
+        }],
+        having: Sequelize.where(
+            Sequelize.fn(`COUNT`, Sequelize.col(`CategoryId`)),
+            {
+              [Op.gte]: 1
+            }
+        )
       });
       return result.map((category) => category.get());
     }

@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
     proxy: true,
     store: new SequelizeStore({
       db: sequelize,
-      expiration: MILISECONDS_IN_MINUTE * 3,
+      expiration: MILISECONDS_IN_MINUTE * 100,
       checkExpirationInterval: MILISECONDS_IN_MINUTE * 1,
     })
   });

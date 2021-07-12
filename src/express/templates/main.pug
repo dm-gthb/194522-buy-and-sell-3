@@ -2,31 +2,38 @@ extends layout.pug
 
 block content
   main.page-content
-    include partials/categories.pug
-    section.tickets-list
-      h2.visually-hidden Самые новые предложения
-      .tickets-list__wrapper
-        .tickets-list__header
-          p.tickets-list__title Самое свежее
-        ul
-          each offer in offers
-            li.tickets-list__item
-              .ticket-card.ticket-card--color01
-                .ticket-card__img
-                  img(src=`/img/${offer.picture}` alt=offer.title)
-                .ticket-card__info
-                  +ticketLabel(offer.type)
-                  .ticket-card__categories
-                    each category in offer.categories
-                      a(href=`/offers/category/${category.id}`) #{category.name}
-                  .ticket-card__header
-                    h3.ticket-card__title
-                      a(href="#") #{offer.title}
-                    p.ticket-card__price
-                      span.js-sum #{offer.sum}
-                      |  ₽
-                  .ticket-card__desc
-                    p #{offer.description}
-        .tickets-list__pagination
-          ul.pagination
-            +pagination(totalPagesCount, page, 2)
+    if offers.length
+      include partials/categories.pug
+      section.tickets-list
+        h2.visually-hidden Самые новые предложения
+        .tickets-list__wrapper
+          .tickets-list__header
+            p.tickets-list__title Самое свежее
+          ul
+            each offer in offers
+              li.tickets-list__item
+                .ticket-card.ticket-card--color01
+                  a(href=`/offers/${offer.id}`)
+                    .ticket-card__img
+                      img(src=`/img/${offer.picture}` alt=offer.title)
+                  .ticket-card__info
+                    +ticketLabel(offer.type)
+                    .ticket-card__categories
+                      each category in offer.categories
+                        a(href=`/offers/category/${category.id}`) #{category.name}
+                    .ticket-card__header
+                      h3.ticket-card__title
+                        a(href=`/offers/${offer.id}`) #{offer.title}
+                      p.ticket-card__price
+                        span.js-sum #{offer.sum}&nbsp;₽
+                    .ticket-card__desc
+                      p #{offer.description}
+          if totalPagesCount > 1
+            .tickets-list__pagination
+              ul.pagination
+                +pagination(totalPagesCount, page, 2)
+    else
+      .message
+        .message__text
+          p На сайте еще не опубликовано ни одного объявления.
+        a(href="/login" class="message__link btn btn--big") Вход и регистрация

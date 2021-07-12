@@ -61,7 +61,7 @@ const mockUsers = [
 ];
 
 const addId = () => ({id: nanoid(MAX_ID_LENGTH)});
-const getPictureFileName = (number) => number > 10 ? `item${number}.jpg` : `item0${number}.jpg`;
+const getPictureFileName = (number) => number >= 10 ? `item${number}.jpg` : `item0${number}.jpg`;
 
 const readFile = async (path) => {
   try {

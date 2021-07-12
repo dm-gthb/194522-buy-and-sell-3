@@ -24,6 +24,10 @@ class API {
     return this._load(`/offers`, {params: {isWithComments, offset, limit}});
   }
 
+  getOffersByUser(userId) {
+    return this._load(`/offers`, {params: {userId}});
+  }
+
   getOffersByCategory(categoryId, limit, offset) {
     return this._load(`/offers`, {params: {categoryId, limit, offset}});
   }

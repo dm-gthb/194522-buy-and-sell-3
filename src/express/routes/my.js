@@ -9,8 +9,8 @@ const myRouter = new Router();
 myRouter.use(privateRoute);
 
 myRouter.get(`/`, async (req, res) => {
-  const offers = await api.getOffers({isWithComments: false});
   const {user} = req.session;
+  const offers = await api.getOffersByUser(user.id);
   res.render(`my-tickets`, {user, offers});
 });
 

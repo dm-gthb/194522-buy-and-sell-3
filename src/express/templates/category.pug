@@ -13,21 +13,22 @@ block content
           each offer in offers
             li.tickets-list__item
               .ticket-card.ticket-card--color01
-                .ticket-card__img
-                  img(src=`/img/${offer.picture}` alt=offer.title)
+                a(href=`/offers/${offer.id}`)
+                  .ticket-card__img
+                    img(src=`/img/${offer.picture}` alt=offer.title)
                 .ticket-card__info
                   +ticketLabel(offer.type)
                   .ticket-card__categories
-                    each category in categories
+                    each category in offer.categories
                       a(href=`/offers/category/${category.id}`) #{category.name}
                   .ticket-card__header
                     h3.ticket-card__title
-                      a(href="#") #{offer.title}
+                      a(href=`/offers/${offer.id}`) #{offer.title}
                     p.ticket-card__price
-                      span.js-sum #{offer.sum}
-                      |  ₽
+                      span.js-sum #{offer.sum}&nbsp;₽
                   .ticket-card__desc
                     p #{offer.description}
-        .tickets-list__pagination
-          ul.pagination
-            +pagination(totalPagesCount, page, 2)
+        if totalPagesCount > 1
+          .tickets-list__pagination
+            ul.pagination
+              +pagination(totalPagesCount, page, 2)
