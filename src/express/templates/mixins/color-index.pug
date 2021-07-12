@@ -1,0 +1,5 @@
+mixin colorIndex(index)
+  -
+    const colorIndex = (index % 15) + 1;
+  div(class = colorIndex < 10 ? `ticket-card ticket-card--color0${colorIndex}` : `ticket-card ticket-card--color${colorIndex}` )
+    block

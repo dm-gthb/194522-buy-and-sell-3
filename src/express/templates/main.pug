@@ -10,9 +10,9 @@ block content
           .tickets-list__header
             p.tickets-list__title Самое свежее
           ul
-            each offer in offers
+            each offer, index in offers
               li.tickets-list__item
-                .ticket-card.ticket-card--color01
+                +colorIndex(index)
                   a(href=`/offers/${offer.id}`)
                     .ticket-card__img
                       img(src=`/img/${offer.picture}` alt=offer.title)
