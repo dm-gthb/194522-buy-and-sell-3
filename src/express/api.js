@@ -43,6 +43,12 @@ class API {
     });
   }
 
+  deleteOffer(id) {
+    return this._load(`/offers/${id}`, {
+      method: HttpMethod.DELETE
+    });
+  }
+
   search(query) {
     return this._load(`/search`, {params: {query}});
   }
