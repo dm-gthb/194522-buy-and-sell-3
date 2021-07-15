@@ -35,7 +35,10 @@ class CategoryService {
           attributes: []
         }],
         having: Sequelize.where(
-            Sequelize.fn(`COUNT`, Sequelize.col(`CategoryId`)),
+            Sequelize.fn(
+                `COUNT`,
+                Sequelize.col(`CategoryId`)
+            ),
             {
               [Op.gte]: 1
             }

@@ -6,6 +6,7 @@ module.exports = {
   API_PREFIX: `/api`,
   MAX_ID_LENGTH: 6,
   OFFERS_PER_PAGE: 8,
+  MAX_OFFERS_MAIN_PAGE: 8,
   ExitCode: {
     ERROR: 1,
     SUCCESS: 0,

@@ -13,7 +13,7 @@ block content
           li.tickets-list__item.js-card
             form(action=`/my/${offer.id}`, method="post")
               +colorIndex(index)
-                a(href=`/offers/${offer.id}`)
+                a(href=`/offers/edit/${offer.id}`)
                   .ticket-card__img
                     img(src=`/img/${offer.picture}` alt=offer.title)
                 .ticket-card__info
@@ -23,7 +23,7 @@ block content
                       a(href=`/offers/category/${category.id}`) #{category.name}
                   .ticket-card__header
                     h3.ticket-card__title
-                      a(href=`/offers/${offer.id}`) #{offer.title}
+                      a(href=`/offers/edit/${offer.id}`) #{offer.title}
                     p.ticket-card__price
                       span.js-sum #{offer.sum}&nbsp;₽
                 button.ticket-card__del(type="submit") Удалить

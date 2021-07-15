@@ -56,7 +56,7 @@ offersRouter.get(`/category/:categoryId`, routeParamsValidator, async (req, res)
     category,
   ] = await Promise.all([
     api.getOffersByCategory(id, limit, offset),
-    api.getCategories(true),
+    api.getCategories({isNeedCount: true}),
     api.getCategory(id),
   ]);
 

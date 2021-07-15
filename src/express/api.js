@@ -24,8 +24,16 @@ class API {
     return this._load(`/offers`, {params: {isWithComments, offset, limit}});
   }
 
-  getOffersByUser(userId) {
-    return this._load(`/offers`, {params: {userId}});
+  getFirstMostNewOffers(limit) {
+    return this._load(`/offers`, {params: {offset: 0, limit}});
+  }
+
+  getFirstMostDiscussedOffers(limit) {
+    return this._load(`/offers`, {params: {isOffersSortedByComments: true, offset: 0, limit}});
+  }
+
+  getOffersByUser({userId, isWithComments}) {
+    return this._load(`/offers`, {params: {userId, isWithComments}});
   }
 
   getOffersByCategory(categoryId, limit, offset) {
@@ -53,7 +61,7 @@ class API {
     return this._load(`/search`, {params: {query}});
   }
 
-  getCategories(isNeedCount) {
+  getCategories({isNeedCount} = false) {
     return this._load(`/categories`, {params: {isNeedCount}});
   }
 
@@ -72,6 +80,12 @@ class API {
     return this._load(`/offers/${offerId}/comments`, {
       method: HttpMethod.POST,
       data
+    });
+  }
+
+  deleteComment({offerId, commentId}) {
+    return this._load(`/offers/${offerId}/comments/${commentId}`, {
+      method: HttpMethod.DELETE
     });
   }
 

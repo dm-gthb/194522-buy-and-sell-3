@@ -13,23 +13,31 @@ module.exports = (app, offerService, commentService) => {
   app.use(`/offers`, route);
 
   route.get(`/`, async (req, res) => {
-    const {isWithComments, categoryId, userId, offset, limit} = req.query;
+    const {isWithComments, isOffersSortedByComments, categoryId, userId, offset, limit} = req.query;
+
+    const findAllOffers = async () => await offerService.findAll();
+    const findOffersPage = async () => await offerService.findPage(limit, offset);
+    const findAllOffersByUser = async () => await offerService.findByUser({userId, isWithComments});
+    const findOffersPageByCategory = async () => await offerService.findPageByCategory(categoryId, limit, offset);
+    const findFistMostDiscussedOffers = async () => await offerService.findPageSortedByComments(limit);
 
     if (userId) {
-      const offers = await offerService.findByUser(userId);
+      const offers = await findAllOffersByUser({userId, isWithComments});
       return res.status(StatusCode.OK).json(offers);
     }
 
     if (categoryId) {
-      const result = await offerService.findPageByCategory(categoryId, limit, offset);
+      const result = await findOffersPageByCategory(categoryId, limit, offset);
       return res.status(StatusCode.OK).json(result);
     }
 
-    const findPage = async () => await offerService.findPage(limit, offset);
-    const findAll = async () => await offerService.findAll(isWithComments);
+    if (isOffersSortedByComments) {
+      const offers = await findFistMostDiscussedOffers(limit);
+      return res.status(StatusCode.OK).json(offers);
+    }
 
     const isFindPage = limit || offset;
-    const offers = isFindPage ? await findPage() : await findAll();
+    const offers = isFindPage ? await findOffersPage() : await findAllOffers();
 
     return res.status(StatusCode.OK).json(offers);
   });

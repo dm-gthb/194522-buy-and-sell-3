@@ -1,5 +1,7 @@
 'use strict';
 
+const Sequelize = require(`sequelize`);
+const {Op} = require(`sequelize`);
 const Aliase = require(`../models/aliase`);
 
 class OfferService {
@@ -35,6 +37,7 @@ class OfferService {
         }
       }
     ];
+
     if (isWithComments) {
       include.push({
         model: this._Comment,
@@ -49,11 +52,12 @@ class OfferService {
       });
     }
 
-    const offer = await this._Offer.findByPk(id, {include});
+    const order = isWithComments ? [[Aliase.COMMENTS, `createdAt`, `DESC`]] : null;
+    const offer = await this._Offer.findByPk(id, {include, order});
     return offer;
   }
 
-  async findAll(isWithComments) {
+  async findAll() {
     const include = [
       Aliase.CATEGORIES,
       {
@@ -64,19 +68,6 @@ class OfferService {
         }
       }
     ];
-    if (isWithComments) {
-      include.push({
-        model: this._Comment,
-        as: Aliase.COMMENTS,
-        include: {
-          model: this._User,
-          as: Aliase.USER,
-          attributes: {
-            exclude: [`passwordHash`],
-          }
-        }
-      });
-    }
     const offers = await this._Offer.findAll({include});
     return offers.map((item) => item.get());
   }
@@ -101,13 +92,41 @@ class OfferService {
     return {count, offers: rows};
   }
 
-  async findByUser(userId) {
+  async findByUser({userId, isWithComments}) {
+    const include = [
+      Aliase.CATEGORIES,
+      {
+        model: this._User,
+        as: Aliase.USER,
+        attributes: {
+          exclude: [`passwordHash`],
+        },
+        where: {
+          id: userId,
+        }
+      }
+    ];
+
+    if (isWithComments) {
+      include.push({
+        model: this._Comment,
+        as: Aliase.COMMENTS,
+        include: {
+          model: this._User,
+          as: Aliase.USER,
+          attributes: {
+            exclude: [`passwordHash`],
+          }
+        }
+      });
+    }
+
+    const order = isWithComments ? [[Aliase.COMMENTS, `createdAt`, `DESC`]] : [[`createdAt`, `DESC`]];
+
     const offersByUser = await this._Offer.findAll({
-      include: [Aliase.CATEGORIES],
-      where: {
-        userId,
-      },
-      order: [[`createdAt`, `DESC`]],
+      include,
+      distinct: true,
+      order
     });
     return offersByUser.map((offer) => offer.get());
   }
@@ -130,6 +149,38 @@ class OfferService {
       distinct: true
     });
     return {count, offers: rows};
+  }
+
+  async findPageSortedByComments(limit) {
+    const offers = await this._Offer.findAll({
+      limit,
+      attributes: {
+        include: [
+          [
+            Sequelize.literal(
+                `(SELECT COUNT(*) FROM comments WHERE "comments"."offerId" = "Offer"."id")`
+            ),
+            `countComments`
+          ],
+        ],
+      },
+      include: [
+        Aliase.CATEGORIES,
+        Aliase.COMMENTS
+      ],
+      order: [Sequelize.literal(`"countComments" DESC`)],
+      group: [Sequelize.col(`Offer.id`)],
+      having: Sequelize.where(
+          Sequelize.literal(
+              `(SELECT COUNT(*) FROM comments WHERE "comments"."offerId" = "Offer"."id")`
+          ),
+          {
+            [Op.gte]: 1,
+          }
+      )
+    });
+
+    return offers.map((offer) => offer.get());
   }
 
   async update(id, offer) {

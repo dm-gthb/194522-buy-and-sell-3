@@ -3,33 +3,31 @@
 const {Router} = require(`express`);
 const path = require(`path`);
 const {nanoid} = require(`nanoid`);
-const {OFFERS_PER_PAGE} = require(`../../constants`);
+const {MAX_OFFERS_MAIN_PAGE} = require(`../../constants`);
 const {createStorage} = require(`../../utils`);
 const api = require(`../api`).getAPI();
 
 const UPLOAD_DIR = `../upload/img/`;
 const UNIQUE_NAME_LENGTH = 10;
+
 const uploadDirAbsolute = path.resolve(__dirname, UPLOAD_DIR);
 const upload = createStorage(uploadDirAbsolute, nanoid(UNIQUE_NAME_LENGTH));
 
 const mainRouter = new Router();
 
 mainRouter.get(`/`, async (req, res) => {
-  const page = parseInt(req.query.page, 10) || 1;
-  const limit = OFFERS_PER_PAGE;
-  const offset = (page - 1) * OFFERS_PER_PAGE;
-
   const [
-    {count, offers},
+    {offers: newOffers},
+    discussedOffers,
     categories,
   ] = await Promise.all([
-    api.getOffers({comments: false, limit, offset}),
-    api.getCategories(true),
+    api.getFirstMostNewOffers(MAX_OFFERS_MAIN_PAGE),
+    api.getFirstMostDiscussedOffers(MAX_OFFERS_MAIN_PAGE),
+    api.getCategories({isNeedCount: true}),
   ]);
 
-  const totalPagesCount = Math.ceil(count / OFFERS_PER_PAGE);
   const {user} = req.session;
-  res.render(`main`, {offers, categories, page, totalPagesCount, user});
+  res.render(`main`, {newOffers, discussedOffers, categories, user});
 });
 
 mainRouter.get(`/register`, (req, res) => {
